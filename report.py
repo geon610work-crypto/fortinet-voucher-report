@@ -11,7 +11,7 @@ SLACK_WEBHOOK_URL = os.environ["SLACK_WEBHOOK_URL"]
 def asana_get(path):
     req = urllib.request.Request(
         f"https://app.asana.com/api/1.0{path}",
-        headers={
+        headers=
             "Authorization": f"Bearer {ASANA_TOKEN}",
             "Accept": "application/json"
         }
@@ -80,7 +80,7 @@ def main():
         })
 
     today = datetime.now()
-    days = ["일","월","화","수","목","금","토"]
+        days = ["월","화","수","목","금","토","일"]
     date_str = f"{today.year}년 {today.month}월 {today.day}일 ({days[today.weekday()]})"
 
     used   = [r for r in rows if r["used"] == "사용"]
