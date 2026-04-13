@@ -1,6 +1,5 @@
 import os
 import json
-import re
 import urllib.request
 import urllib.error
 from datetime import datetime
@@ -56,6 +55,8 @@ VOUCHERS = {
     "FTE27910435E": {"no": 12, "expire": "4.Jun.26"},
 }
 
+MENTION = "<@U04PN00MA4B>"
+
 def main():
     print("아사나 태스크 불러오는 중...")
     tasks_raw = asana_get(
@@ -63,6 +64,7 @@ def main():
         "?opt_fields=name,assignee.name,custom_fields,completed&limit=100"
     )
 
+    import re
     rows = []
     for t in tasks_raw:
         name = t.get("name", "")
@@ -88,10 +90,11 @@ def main():
     failed = [r for r in rows if r["passed"] == "불합격"]
     expire = [r for r in rows if r["expire"] and is_expiring_soon(r["expire"])]
 
-    msg  = "📋 *포티넷 NSE 자격증 바우처 현황 보고*\n"
+    msg = f"{MENTION}\n"
+    msg += f"📋 *포티넷 NSE 자격증 바우처 현황 보고*\n"
     msg += f"🗓 {date_str}\n"
     msg += "─" * 36 + "\n\n"
-    msg += "📊 *전체 현황*\n"
+    msg += f"📊 *전체 현황*\n"
     msg += f"• 전체 바우처: {len(rows)}개\n"
     msg += f"• 사용됨: {len(used)}개 / 미사용: {len(unused)}개\n"
     msg += f"• 합격: {len(passed)}명 / 불합격: {len(failed)}명\n\n"
@@ -118,9 +121,6 @@ def main():
         msg += "⚠️ *만료 임박 바우처 (30일 이내)*\n"
         for r in expire:
             msg += f"• [{r['no']}] {r['code']} — 만료: {r['expire']}\n"
-        msg += "\n"
-
-    msg += "─" * 36 + "\n_문의사항은 담당자에게 연락 주세요._"
 
     print("슬랙에 전송 중...")
     payload = json.dumps({"text": msg}).encode("utf-8")
