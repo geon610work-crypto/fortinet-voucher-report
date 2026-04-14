@@ -1,0 +1,28 @@
+name: 포티넷 NSE 바우처 주간 보고
+
+on:
+  schedule:
+    - cron: '0 6 * * 5'  # 매주 금요일 오후 3시 (KST = UTC+9, 즉 UTC 06:00)
+  workflow_dispatch:  # 수동 실행 버튼도 활성화
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 저장소 체크아웃
+        uses: actions/checkout@v4
+
+      - name: Python 설치
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 바우처 현황 보고 실행
+        env:
+          ASANA_TOKEN: ${{ secrets.ASANA_TOKEN }}
+          ASANA_PROJECT_GID: ${{ secrets.ASANA_PROJECT_GID }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_DM_WEBHOOK_URL: ${{ secrets.SLACK_DM_WEBHOOK_URL }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+        run: python report.py
