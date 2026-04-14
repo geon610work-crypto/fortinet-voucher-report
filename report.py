@@ -10,6 +10,8 @@ ASANA_PROJECT_GID = os.environ["ASANA_PROJECT_GID"]
 SLACK_WEBHOOK_URL = os.environ["SLACK_WEBHOOK_URL"]
 SLACK_DM_WEBHOOK_URL = os.environ.get("SLACK_DM_WEBHOOK_URL", "")
 IS_MANUAL = os.environ.get("GITHUB_EVENT_NAME", "") == "workflow_dispatch"
+GITHUB_REPO = os.environ.get("GITHUB_REPOSITORY", "")
+PAGES_URL = f"https://{GITHUB_REPO.split('/')[0]}.github.io/{GITHUB_REPO.split('/')[1]}"
 
 MENTION = "<@U04PN00MA4B>"
 FCSS_GOAL = 3
@@ -32,126 +34,13 @@ def get_cf(task, name):
             return f.get("display_value", "") or ""
     return ""
 
-def shorten_exam(name):
-    if not name: return "-"
-    if "Network Security" in name: return "NST"
-    if "Enterprise Firewall" in name: return "EFW"
-    if "FortiManager" in name: return "FMG"
-    if "FortiOS" in name: return "FOS"
-    return name.split()[0][:6] if name.split() else name[:6]
-
-def status_text(used, passed):
-    if used != "사용": return "⬜ 미사용"
-    if passed == "합격": return "✅ 합격"
-    if passed == "불합격": return "❌ 불합격"
-    return "🔄 결과대기"
-
-def count_qualified(people_dict):
+def count_qualified(people):
     count = 0
-    for tasks in people_dict.values():
+    for tasks in people.values():
         used = [t for t in tasks if t["used"] == "사용"]
         if len(used) >= 2 and all(t["passed"] == "합격" for t in used):
             count += 1
     return count
-
-def make_table_text(header_cols, rows_data):
-    """고정폭 텍스트 표 생성 - 슬랙 코드블록용"""
-    COL_W = [10, 12, 12, 8]
-    def cell(s, w):
-        vis = sum(2 if ord(c) > 127 else 1 for c in s)
-        return s + " " * max(0, w - vis)
-
-    lines = []
-    # 헤더
-    h = ""
-    for i, col in enumerate(header_cols):
-        h += cell(col, COL_W[i])
-    lines.append(h.rstrip())
-    lines.append("─" * 44)
-    # 데이터
-    for row in rows_data:
-        r = ""
-        for i, col in enumerate(row):
-            r += cell(col, COL_W[i])
-        lines.append(r.rstrip())
-    return "\n".join(lines)
-
-def build_blocks(date_str, fcss_people, fcp_people, fcss_done, fcp_done):
-    blocks = []
-
-    # 헤더
-    blocks.append({
-        "type": "section",
-        "text": {
-            "type": "mrkdwn",
-            "text": f"{MENTION}\n*📋 포티넷 NSE 자격증 취득 현황 보고*\n🗓 {date_str}"
-        }
-    })
-    blocks.append({"type": "divider"})
-
-    # 요약
-    blocks.append({
-        "type": "section",
-        "text": {
-            "type": "mrkdwn",
-            "text": f"📊 *취득 현황 요약*\n• FCSS: *{fcss_done}/{FCSS_GOAL}명* 취득완료　|　FCP: *{fcp_done}/{FCP_GOAL}명* 취득완료"
-        }
-    })
-    blocks.append({"type": "divider"})
-
-    # FCSS 표
-    fcss_rows = []
-    for assignee, tasks in fcss_people.items():
-        nst = next((t for t in tasks if "Network Security" in t["exam"]), None)
-        efw = next((t for t in tasks if "Enterprise Firewall" in t["exam"]), None)
-        nst_s = status_text(nst["used"], nst["passed"]) if nst else "⬜ 미배정"
-        efw_s = status_text(efw["used"], efw["passed"]) if efw else "⬜ 미배정"
-        used_tasks = [t for t in tasks if t["used"] == "사용"]
-        acq = "🏆 취득" if len(used_tasks) >= 2 and all(t["passed"] == "합격" for t in used_tasks) else "❌"
-        fcss_rows.append([assignee, nst_s, efw_s, acq])
-
-    fcss_table = make_table_text(["담당자", "NST", "EFW", "취득"], fcss_rows)
-    blocks.append({
-        "type": "section",
-        "text": {"type": "mrkdwn", "text": f"🔵 *FCSS 현황* ({fcss_done}/{FCSS_GOAL}명)"}
-    })
-    blocks.append({
-        "type": "section",
-        "text": {"type": "mrkdwn", "text": f"```{fcss_table}```"}
-    })
-    blocks.append({"type": "divider"})
-
-    # FCP 표
-    fcp_exams = []
-    for tasks in fcp_people.values():
-        for t in tasks:
-            s = shorten_exam(t["exam"])
-            if s not in fcp_exams:
-                fcp_exams.append(s)
-    e1 = fcp_exams[0] if len(fcp_exams) > 0 else "과목1"
-    e2 = fcp_exams[1] if len(fcp_exams) > 1 else "과목2"
-
-    fcp_rows = []
-    for assignee, tasks in fcp_people.items():
-        t1 = tasks[0] if len(tasks) > 0 else None
-        t2 = tasks[1] if len(tasks) > 1 else None
-        s1 = status_text(t1["used"], t1["passed"]) if t1 else "⬜ 미배정"
-        s2 = status_text(t2["used"], t2["passed"]) if t2 else "⬜ 미배정"
-        used_tasks = [t for t in tasks if t["used"] == "사용"]
-        acq = "🏆 취득" if len(used_tasks) >= 2 and all(t["passed"] == "합격" for t in used_tasks) else "❌"
-        fcp_rows.append([assignee, s1, s2, acq])
-
-    fcp_table = make_table_text(["담당자", e1, e2, "취득"], fcp_rows)
-    blocks.append({
-        "type": "section",
-        "text": {"type": "mrkdwn", "text": f"🟠 *FCP 현황* ({fcp_done}/{FCP_GOAL}명)"}
-    })
-    blocks.append({
-        "type": "section",
-        "text": {"type": "mrkdwn", "text": f"```{fcp_table}```"}
-    })
-
-    return blocks
 
 def main():
     print("아사나 태스크 불러오는 중...")
@@ -190,13 +79,52 @@ def main():
     days = ["월","화","수","목","금","토","일"]
     date_str = f"{today.year}년 {today.month}월 {today.day}일 ({days[today.weekday()]})"
 
-    blocks = build_blocks(date_str, fcss_people, fcp_people, fcss_done, fcp_done)
-    payload = json.dumps({"blocks": blocks}).encode("utf-8")
+    # JSON 데이터 생성
+    report_data = {
+        "generated_at": today.isoformat(),
+        "fcss_done": fcss_done,
+        "fcp_done": fcp_done,
+        "fcss": [
+            {"name": a, "tasks": [{"exam": t["exam"], "used": t["used"], "passed": t["passed"]} for t in tasks]}
+            for a, tasks in fcss_people.items()
+        ],
+        "fcp": [
+            {"name": a, "tasks": [{"exam": t["exam"], "used": t["used"], "passed": t["passed"]} for t in tasks]}
+            for a, tasks in fcp_people.items()
+        ]
+    }
+
+    # HTML 생성
+    print("HTML 보고서 생성 중...")
+    with open("report_template.html", "r", encoding="utf-8") as f:
+        template = f.read()
+
+    html = template.replace("__REPORT_DATA__", json.dumps(report_data, ensure_ascii=False))
+
+    os.makedirs("docs", exist_ok=True)
+    with open("docs/index.html", "w", encoding="utf-8") as f:
+        f.write(html)
+    print("HTML 생성 완료: docs/index.html")
+
+    # 슬랙 메시지 (링크 포함 간단 요약)
+    report_url = PAGES_URL
+    mention_line = f"{MENTION}\n" if not IS_MANUAL else ""
+    msg_lines = [
+        f"📋 *포티넷 NSE 자격증 취득 현황 보고*",
+        f"🗓 {date_str}",
+        "─" * 30,
+        f"• FCSS: *{fcss_done}/{FCSS_GOAL}명* 취득완료",
+        f"• FCP:  *{fcp_done}/{FCP_GOAL}명* 취득완료",
+        "",
+        f"📊 <{report_url}|상세 현황 보기 →>",
+    ]
+    msg = mention_line + "\n".join(msg_lines)
 
     webhook = SLACK_DM_WEBHOOK_URL if IS_MANUAL and SLACK_DM_WEBHOOK_URL else SLACK_WEBHOOK_URL
     target = "DM" if IS_MANUAL and SLACK_DM_WEBHOOK_URL else "채널"
 
     print(f"슬랙 {target}에 전송 중...")
+    payload = json.dumps({"text": msg}).encode("utf-8")
     req = urllib.request.Request(
         webhook,
         data=payload,
