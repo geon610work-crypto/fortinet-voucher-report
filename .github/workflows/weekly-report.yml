@@ -2,13 +2,15 @@ name: 포티넷 NSE 바우처 주간 보고
 
 on:
   schedule:
-    - cron: '0 6 * * 5'  # 매주 금요일 오후 3시 (KST = UTC+9, 즉 UTC 06:00)
-  workflow_dispatch:  # 수동 실행 버튼도 활성화
+    - cron: '0 6 * * 5'
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   report:
     runs-on: ubuntu-latest
-
     steps:
       - name: 저장소 체크아웃
         uses: actions/checkout@v4
@@ -25,4 +27,11 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_DM_WEBHOOK_URL: ${{ secrets.SLACK_DM_WEBHOOK_URL }}
           GITHUB_EVENT_NAME: ${{ github.event_name }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
         run: python report.py
+
+      - name: GitHub Pages 배포
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
