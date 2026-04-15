@@ -5,218 +5,100 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>포티넷 NSE 자격증 취득 현황</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
   :root {
-    --bg: #f7f7f5;
-    --card: #ffffff;
-    --border: #e8e8e4;
-    --text: #1a1a1a;
-    --muted: #888880;
-    --fcss: #1a5fb4;
-    --fcss-bg: #e8f0fc;
-    --fcp: #c27d0e;
-    --fcp-bg: #fef3dc;
-    --pass: #1d7a4a;
-    --pass-bg: #e6f4ec;
-    --wait: #9a6000;
-    --wait-bg: #fef5e0;
-    --none: #666660;
-    --none-bg: #f0f0ec;
-    --fail: #c0392b;
-    --trophy: #d4a017;
+    --bg:#f7f7f5;--card:#fff;--border:#e8e8e4;--text:#1a1a1a;--muted:#888880;
+    --fcss:#1a5fb4;--fcss-bg:#e8f0fc;--fcp:#c27d0e;--fcp-bg:#fef3dc;
+    --pass:#1d7a4a;--pass-bg:#e6f4ec;--wait:#9a6000;--wait-bg:#fef5e0;
+    --none:#666660;--none-bg:#f0f0ec;--fail:#c0392b;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'Noto Sans KR', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    padding: 2.5rem 1rem;
-  }
-  .container { max-width: 760px; margin: 0 auto; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:2.5rem 1rem}
+  .container{max-width:800px;margin:0 auto}
 
-  .header {
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1.5px solid var(--border);
-  }
-  .header-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-  .header h1 {
-    font-size: 22px;
-    font-weight: 600;
-    letter-spacing: -0.3px;
-    line-height: 1.3;
-  }
-  .header .date {
-    font-size: 13px;
-    color: var(--muted);
-    margin-top: 4px;
-    font-family: 'DM Mono', monospace;
-  }
-  .last-updated {
-    font-size: 12px;
-    color: var(--muted);
-    font-family: 'DM Mono', monospace;
-    white-space: nowrap;
-    margin-top: 4px;
-  }
+  .header{margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1.5px solid var(--border)}
+  .header-top{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+  .header h1{font-size:22px;font-weight:600;letter-spacing:-0.3px}
+  .header .date{font-size:13px;color:var(--muted);margin-top:4px;font-family:'DM Mono',monospace}
+  .header-right{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+  .last-updated{font-size:12px;color:var(--muted);font-family:'DM Mono',monospace}
 
-  .summary-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 2rem;
+  .export-btns{display:flex;gap:8px}
+  .export-btn{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:7px 14px;border-radius:8px;font-size:12px;font-weight:500;
+    cursor:pointer;border:1px solid var(--border);
+    background:var(--card);color:var(--text);
+    font-family:'Noto Sans KR',sans-serif;transition:background 0.15s;
   }
-  .summary-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 1.25rem 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-  .summary-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    flex-shrink: 0;
-  }
-  .summary-icon.fcss { background: var(--fcss-bg); }
-  .summary-icon.fcp  { background: var(--fcp-bg); }
-  .summary-info { flex: 1; }
-  .summary-label { font-size: 12px; color: var(--muted); font-weight: 500; margin-bottom: 4px; }
-  .summary-value { font-size: 20px; font-weight: 600; font-family: 'DM Mono', monospace; }
-  .summary-goal { font-size: 13px; color: var(--muted); }
-  .progress-bar {
-    height: 4px;
-    background: var(--border);
-    border-radius: 2px;
-    margin-top: 8px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    border-radius: 2px;
-    transition: width 0.8s ease;
-  }
-  .progress-fill.fcss { background: var(--fcss); }
-  .progress-fill.fcp  { background: var(--fcp); }
+  .export-btn:hover{background:#f0f0ec}
+  .export-btn.csv{border-color:#1d7a4a;color:#1d7a4a}
+  .export-btn.csv:hover{background:#e6f4ec}
+  .export-btn.excel{border-color:#1a5fb4;color:#1a5fb4}
+  .export-btn.excel:hover{background:#e8f0fc}
 
-  .section { margin-bottom: 2rem; }
-  .section-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 12px;
-  }
-  .section-dot {
-    width: 10px; height: 10px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .section-dot.fcss { background: var(--fcss); }
-  .section-dot.fcp  { background: var(--fcp); }
-  .section-title {
-    font-size: 15px;
-    font-weight: 600;
-    letter-spacing: -0.2px;
-  }
-  .section-badge {
-    font-size: 12px;
-    padding: 2px 10px;
-    border-radius: 100px;
-    font-family: 'DM Mono', monospace;
-    font-weight: 500;
-  }
-  .section-badge.fcss { background: var(--fcss-bg); color: var(--fcss); }
-  .section-badge.fcp  { background: var(--fcp-bg);  color: var(--fcp); }
+  .summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:2rem}
+  .summary-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;display:flex;align-items:center;gap:1rem}
+  .summary-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+  .summary-icon.fcss{background:var(--fcss-bg)}
+  .summary-icon.fcp{background:var(--fcp-bg)}
+  .summary-info{flex:1}
+  .summary-label{font-size:12px;color:var(--muted);font-weight:500;margin-bottom:4px}
+  .summary-value{font-size:20px;font-weight:600;font-family:'DM Mono',monospace}
+  .summary-goal{font-size:13px;color:var(--muted)}
+  .progress-bar{height:4px;background:var(--border);border-radius:2px;margin-top:8px;overflow:hidden}
+  .progress-fill{height:100%;border-radius:2px}
+  .progress-fill.fcss{background:var(--fcss)}
+  .progress-fill.fcp{background:var(--fcp)}
 
-  .table-wrap {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13.5px;
-  }
-  thead tr {
-    background: var(--bg);
-    border-bottom: 1px solid var(--border);
-  }
-  th {
-    padding: 10px 16px;
-    font-size: 11.5px;
-    font-weight: 600;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    text-align: left;
-  }
-  th:not(:first-child) { text-align: center; }
-  td {
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--border);
-    vertical-align: middle;
-  }
-  td:not(:first-child) { text-align: center; }
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: #fafaf8; }
+  .section{margin-bottom:2rem}
+  .section-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+  .section-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+  .section-dot.fcss{background:var(--fcss)}
+  .section-dot.fcp{background:var(--fcp)}
+  .section-title{font-size:15px;font-weight:600}
+  .section-badge{font-size:12px;padding:2px 10px;border-radius:100px;font-family:'DM Mono',monospace;font-weight:500}
+  .section-badge.fcss{background:var(--fcss-bg);color:var(--fcss)}
+  .section-badge.fcp{background:var(--fcp-bg);color:var(--fcp)}
 
-  .name-cell { font-weight: 500; font-size: 14px; }
+  .table-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  thead tr{background:var(--bg);border-bottom:1px solid var(--border)}
+  th{padding:10px 16px;font-size:11.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;text-align:left}
+  th:not(:first-child){text-align:center}
+  td{padding:12px 16px;border-bottom:1px solid var(--border);vertical-align:middle}
+  td:not(:first-child){text-align:center}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:#fafaf8}
+  .name-cell{font-weight:500;font-size:14px}
 
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 12px;
-    padding: 3px 10px;
-    border-radius: 100px;
-    font-weight: 500;
-    white-space: nowrap;
-  }
-  .badge-pass  { background: var(--pass-bg);  color: var(--pass); }
-  .badge-wait  { background: var(--wait-bg);  color: var(--wait); }
-  .badge-none  { background: var(--none-bg);  color: var(--none); }
-  .badge-fail  { background: #fde8e6;          color: var(--fail); }
+  .badge{display:inline-flex;align-items:center;gap:4px;font-size:12px;padding:3px 10px;border-radius:100px;font-weight:500;white-space:nowrap}
+  .badge-pass{background:var(--pass-bg);color:var(--pass)}
+  .badge-wait{background:var(--wait-bg);color:var(--wait)}
+  .badge-none{background:var(--none-bg);color:var(--none)}
+  .badge-fail{background:#fde8e6;color:var(--fail)}
+  .acq-done{font-size:16px}
+  .acq-no{font-size:16px;color:#ddd}
 
-  .acq-done { font-size: 16px; }
-  .acq-no   { font-size: 16px; color: #ddd; }
-
-  .footer {
-    text-align: center;
-    font-size: 12px;
-    color: var(--muted);
-    margin-top: 2rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--border);
-    font-family: 'DM Mono', monospace;
-  }
+  .footer{text-align:center;font-size:12px;color:var(--muted);margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);font-family:'DM Mono',monospace}
 </style>
 </head>
 <body>
 <div class="container">
-
   <div class="header">
     <div class="header-top">
       <div>
         <h1>포티넷 NSE 자격증 취득 현황</h1>
         <div class="date" id="report-date"></div>
       </div>
-      <div class="last-updated" id="last-updated"></div>
+      <div class="header-right">
+        <div class="last-updated" id="last-updated"></div>
+        <div class="export-btns">
+          <button class="export-btn csv" onclick="downloadCSV()">⬇ CSV 다운로드</button>
+          <button class="export-btn excel" onclick="downloadExcel()">⬇ 엑셀 다운로드</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -247,14 +129,7 @@
     </div>
     <div class="table-wrap">
       <table>
-        <thead>
-          <tr>
-            <th>담당자</th>
-            <th>NST</th>
-            <th>EFW</th>
-            <th>자격 취득</th>
-          </tr>
-        </thead>
+        <thead><tr><th>담당자</th><th>시험 1</th><th>시험 2</th><th>자격 취득</th></tr></thead>
         <tbody id="fcss-tbody"></tbody>
       </table>
     </div>
@@ -268,20 +143,13 @@
     </div>
     <div class="table-wrap">
       <table>
-        <thead>
-          <tr>
-            <th>담당자</th>
-            <th id="fcp-col1">과목1</th>
-            <th id="fcp-col2">과목2</th>
-            <th>자격 취득</th>
-          </tr>
-        </thead>
+        <thead><tr><th>담당자</th><th>시험 1</th><th>시험 2</th><th>자격 취득</th></tr></thead>
         <tbody id="fcp-tbody"></tbody>
       </table>
     </div>
   </div>
 
-  <div class="footer" id="footer">Fortinet NSE 바우처 관리 시스템</div>
+  <div class="footer">Fortinet NSE 바우처 관리 시스템</div>
 </div>
 
 <script>
@@ -292,6 +160,13 @@ function badge(used, passed) {
   if (passed === '합격') return '<span class="badge badge-pass">✅ 합격</span>';
   if (passed === '불합격') return '<span class="badge badge-fail">❌ 불합격</span>';
   return '<span class="badge badge-wait">🔄 결과대기</span>';
+}
+
+function statusText(used, passed) {
+  if (used !== '사용') return '미사용';
+  if (passed === '합격') return '합격';
+  if (passed === '불합격') return '불합격';
+  return '결과대기';
 }
 
 function isQualified(tasks) {
@@ -306,18 +181,17 @@ document.getElementById('report-date').textContent =
 document.getElementById('last-updated').textContent =
   `업데이트: ${today.toLocaleTimeString('ko-KR', {hour:'2-digit', minute:'2-digit'})}`;
 
-// FCSS
 let fcssDone = 0;
 const fcssTbody = document.getElementById('fcss-tbody');
 DATA.fcss.forEach(person => {
-  const nst = person.tasks.find(t => t.exam.includes('Network Security'));
-  const efw = person.tasks.find(t => t.exam.includes('Enterprise Firewall'));
+  const t1 = person.tasks[0];
+  const t2 = person.tasks[1];
   const qual = isQualified(person.tasks);
   if (qual) fcssDone++;
   fcssTbody.innerHTML += `<tr>
     <td class="name-cell">${person.name}</td>
-    <td>${nst ? badge(nst.used, nst.passed) : '<span class="badge badge-none">⬜ 미배정</span>'}</td>
-    <td>${efw ? badge(efw.used, efw.passed) : '<span class="badge badge-none">⬜ 미배정</span>'}</td>
+    <td>${t1 ? badge(t1.used, t1.passed) : '<span class="badge badge-none">⬜ 미배정</span>'}</td>
+    <td>${t2 ? badge(t2.used, t2.passed) : '<span class="badge badge-none">⬜ 미배정</span>'}</td>
     <td>${qual ? '<span class="acq-done">🏆</span>' : '<span class="acq-no">—</span>'}</td>
   </tr>`;
 });
@@ -325,19 +199,8 @@ document.getElementById('fcss-done').textContent = fcssDone;
 document.getElementById('fcss-badge').textContent = `${fcssDone} / 3명`;
 document.getElementById('fcss-bar').style.width = `${Math.round(fcssDone/3*100)}%`;
 
-// FCP
 let fcpDone = 0;
 const fcpTbody = document.getElementById('fcp-tbody');
-if (DATA.fcp.length > 0) {
-  const firstPerson = DATA.fcp[0];
-  const exams = [...new Set(firstPerson.tasks.map(t => {
-    if (t.exam.includes('FortiManager')) return 'FMG';
-    if (t.exam.includes('FortiOS')) return 'FOS';
-    return t.exam.split(' ')[0];
-  }))];
-  document.getElementById('fcp-col1').textContent = exams[0] || '과목1';
-  document.getElementById('fcp-col2').textContent = exams[1] || '과목2';
-}
 DATA.fcp.forEach(person => {
   const t1 = person.tasks[0];
   const t2 = person.tasks[1];
@@ -353,6 +216,88 @@ DATA.fcp.forEach(person => {
 document.getElementById('fcp-done').textContent = fcpDone;
 document.getElementById('fcp-badge').textContent = `${fcpDone} / 1명`;
 document.getElementById('fcp-bar').style.width = `${Math.round(fcpDone/1*100)}%`;
+
+function buildRows(people) {
+  return people.map(person => {
+    const t1 = person.tasks[0];
+    const t2 = person.tasks[1];
+    const qual = isQualified(person.tasks);
+    return {
+      '담당자': person.name,
+      '자격': person.tasks[0] ? (DATA.fcss.includes(person) ? 'FCSS' : 'FCP') : '-',
+      '시험1 과목명': t1 ? t1.exam : '',
+      '시험1 사용여부': t1 ? t1.used : '',
+      '시험1 합격여부': t1 ? statusText(t1.used, t1.passed) : '',
+      '시험2 과목명': t2 ? t2.exam : '',
+      '시험2 사용여부': t2 ? t2.used : '',
+      '시험2 합격여부': t2 ? statusText(t2.used, t2.passed) : '',
+      '자격 취득': qual ? '취득' : '미취득',
+    };
+  });
+}
+
+function buildRowsWithQual(people, qual) {
+  return people.map(person => {
+    const t1 = person.tasks[0];
+    const t2 = person.tasks[1];
+    const qualified = isQualified(person.tasks);
+    return {
+      '담당자': person.name,
+      '자격': qual,
+      '시험1 과목명': t1 ? t1.exam : '',
+      '시험1 사용여부': t1 ? t1.used : '',
+      '시험1 합격여부': t1 ? statusText(t1.used, t1.passed) : '',
+      '시험2 과목명': t2 ? t2.exam : '',
+      '시험2 사용여부': t2 ? t2.used : '',
+      '시험2 합격여부': t2 ? statusText(t2.used, t2.passed) : '',
+      '자격 취득': qualified ? '취득' : '미취득',
+    };
+  });
+}
+
+function downloadCSV() {
+  const fcssRows = buildRowsWithQual(DATA.fcss, 'FCSS');
+  const fcpRows  = buildRowsWithQual(DATA.fcp,  'FCP');
+  const allRows  = [...fcssRows, ...fcpRows];
+  const headers  = Object.keys(allRows[0]);
+  const csvContent = [
+    headers.join(','),
+    ...allRows.map(row => headers.map(h => `"${(row[h]||'').toString().replace(/"/g,'""')}"`).join(','))
+  ].join('\n');
+
+  const bom = '\uFEFF';
+  const blob = new Blob([bom + csvContent], {type: 'text/csv;charset=utf-8;'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  const date = today.toISOString().slice(0,10);
+  a.href     = url;
+  a.download = `포티넷_NSE_현황_${date}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function downloadExcel() {
+  const wb = XLSX.utils.book_new();
+
+  const fcssRows = buildRowsWithQual(DATA.fcss, 'FCSS');
+  const fcpRows  = buildRowsWithQual(DATA.fcp,  'FCP');
+
+  const fcssWs = XLSX.utils.json_to_sheet(fcssRows);
+  const fcpWs  = XLSX.utils.json_to_sheet(fcpRows);
+
+  // 열 너비 자동 설정
+  const colWidths = [
+    {wch:10},{wch:6},{wch:36},{wch:12},{wch:12},{wch:36},{wch:12},{wch:12},{wch:8}
+  ];
+  fcssWs['!cols'] = colWidths;
+  fcpWs['!cols']  = colWidths;
+
+  XLSX.utils.book_append_sheet(wb, fcssWs, 'FCSS 현황');
+  XLSX.utils.book_append_sheet(wb, fcpWs,  'FCP 현황');
+
+  const date = today.toISOString().slice(0,10);
+  XLSX.writeFile(wb, `포티넷_NSE_현황_${date}.xlsx`);
+}
 </script>
 </body>
 </html>
