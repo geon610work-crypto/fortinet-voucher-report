@@ -153,7 +153,7 @@
 </div>
 
 <script>
-const DATA = {"generated_at": "2026-04-15T01:30:00.240936", "fcss_done": 0, "fcp_done": 0, "fcss": [{"name": "박건욱", "tasks": [{"exam": "FCSS - Network Security 7.6 Support Engineer", "used": "사용", "passed": "합격"}, {"exam": "FCSS - Enterprise Firewall 7.6 Administrator", "used": "미사용", "passed": "미정"}]}, {"name": "김대중", "tasks": [{"exam": "FCSS - Network Security 7.6 Support Engineer", "used": "미사용", "passed": "미정"}, {"exam": "FCSS - Enterprise Firewall 7.6 Administrator", "used": "미사용", "passed": "미정"}]}, {"name": "임희대", "tasks": [{"exam": "FCSS - Network Security 7.6 Support Engineer", "used": "사용", "passed": "합격"}, {"exam": "FCSS - Enterprise Firewall 7.6 Administrator", "used": "미사용", "passed": "미정"}]}, {"name": "김태경", "tasks": [{"exam": "FCSS - Enterprise Firewall 7.6 Administrator", "used": "미사용", "passed": "미정"}, {"exam": "FCSS - Network Security 7.6 Support Engineer", "used": "사용", "passed": "미정"}]}, {"name": "이재영", "tasks": [{"exam": "FCSS - Network Security 7.6 Support Engineer", "used": "미사용", "passed": "미정"}, {"exam": "FCSS - Enterprise Firewall 7.6 Administrator", "used": "미사용", "passed": "미정"}]}], "fcp": [{"name": "김기현", "tasks": [{"exam": "NSE 4 7.6 FortiOS Administrator", "used": "사용", "passed": "미정"}, {"exam": "NSE 5 7.6 FortiManager Administrator", "used": "사용", "passed": "미정"}]}]};
+const DATA = {"generated_at": "2026-04-15T01:52:54.000903", "fcss_done": 0, "fcp_done": 0, "fcss": [{"name": "박건욱", "tasks": [{"exam": "FCSS - Network Security 7.6 Support Engineer", "used": "사용", "passed": "합격"}, {"exam": "FCSS - Enterprise Firewall 7.6 Administrator", "used": "미사용", "passed": "미정"}]}, {"name": "김대중", "tasks": [{"exam": "FCSS - Network Security 7.6 Support Engineer", "used": "미사용", "passed": "미정"}, {"exam": "FCSS - Enterprise Firewall 7.6 Administrator", "used": "미사용", "passed": "미정"}]}, {"name": "임희대", "tasks": [{"exam": "FCSS - Network Security 7.6 Support Engineer", "used": "사용", "passed": "합격"}, {"exam": "FCSS - Enterprise Firewall 7.6 Administrator", "used": "미사용", "passed": "미정"}]}, {"name": "김태경", "tasks": [{"exam": "FCSS - Enterprise Firewall 7.6 Administrator", "used": "미사용", "passed": "미정"}, {"exam": "FCSS - Network Security 7.6 Support Engineer", "used": "사용", "passed": "미정"}]}, {"name": "이재영", "tasks": [{"exam": "FCSS - Network Security 7.6 Support Engineer", "used": "미사용", "passed": "미정"}, {"exam": "FCSS - Enterprise Firewall 7.6 Administrator", "used": "미사용", "passed": "미정"}]}], "fcp": [{"name": "김기현", "tasks": [{"exam": "NSE 4 7.6 FortiOS Administrator", "used": "사용", "passed": "미정"}, {"exam": "NSE 5 7.6 FortiManager Administrator", "used": "사용", "passed": "미정"}]}]};
 
 function badge(used, passed) {
   if (used !== '사용') return '<span class="badge badge-none">⬜ 미사용</span>';
@@ -281,19 +281,14 @@ function downloadExcel() {
 
   const fcssRows = buildRowsWithQual(DATA.fcss, 'FCSS');
   const fcpRows  = buildRowsWithQual(DATA.fcp,  'FCP');
+  const allRows  = [...fcssRows, ...fcpRows];
 
-  const fcssWs = XLSX.utils.json_to_sheet(fcssRows);
-  const fcpWs  = XLSX.utils.json_to_sheet(fcpRows);
-
-  // 열 너비 자동 설정
-  const colWidths = [
+  const ws = XLSX.utils.json_to_sheet(allRows);
+  ws['!cols'] = [
     {wch:10},{wch:6},{wch:36},{wch:12},{wch:12},{wch:36},{wch:12},{wch:12},{wch:8}
   ];
-  fcssWs['!cols'] = colWidths;
-  fcpWs['!cols']  = colWidths;
 
-  XLSX.utils.book_append_sheet(wb, fcssWs, 'FCSS 현황');
-  XLSX.utils.book_append_sheet(wb, fcpWs,  'FCP 현황');
+  XLSX.utils.book_append_sheet(wb, ws, '취득 현황');
 
   const date = today.toISOString().slice(0,10);
   XLSX.writeFile(wb, `포티넷_NSE_현황_${date}.xlsx`);
