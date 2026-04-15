@@ -281,19 +281,14 @@ function downloadExcel() {
 
   const fcssRows = buildRowsWithQual(DATA.fcss, 'FCSS');
   const fcpRows  = buildRowsWithQual(DATA.fcp,  'FCP');
+  const allRows  = [...fcssRows, ...fcpRows];
 
-  const fcssWs = XLSX.utils.json_to_sheet(fcssRows);
-  const fcpWs  = XLSX.utils.json_to_sheet(fcpRows);
-
-  // 열 너비 자동 설정
-  const colWidths = [
+  const ws = XLSX.utils.json_to_sheet(allRows);
+  ws['!cols'] = [
     {wch:10},{wch:6},{wch:36},{wch:12},{wch:12},{wch:36},{wch:12},{wch:12},{wch:8}
   ];
-  fcssWs['!cols'] = colWidths;
-  fcpWs['!cols']  = colWidths;
 
-  XLSX.utils.book_append_sheet(wb, fcssWs, 'FCSS 현황');
-  XLSX.utils.book_append_sheet(wb, fcpWs,  'FCP 현황');
+  XLSX.utils.book_append_sheet(wb, ws, '취득 현황');
 
   const date = today.toISOString().slice(0,10);
   XLSX.writeFile(wb, `포티넷_NSE_현황_${date}.xlsx`);
