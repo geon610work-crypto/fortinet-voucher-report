@@ -2,7 +2,7 @@ name: 포티넷 NSE 바우처 주간 보고
 
 on:
   schedule:
-    - cron: '0 6 * * 5'
+    - cron: '0 0 * * 5'
   workflow_dispatch:
 
 permissions:
