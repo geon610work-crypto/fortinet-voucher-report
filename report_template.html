@@ -155,11 +155,14 @@
 <script>
 const DATA = __REPORT_DATA__;
 
-function badge(used, passed) {
+function badge(task) {
+  if (!task) return '<span class="badge badge-none">⬜ 미배정</span>';
+  const {used, passed, attempts} = task;
+  const retry = attempts > 1 ? ` <span style="font-size:10px;opacity:0.7">(${attempts}회)</span>` : '';
   if (used !== '사용') return '<span class="badge badge-none">⬜ 미사용</span>';
-  if (passed === '합격') return '<span class="badge badge-pass">✅ 합격</span>';
-  if (passed === '불합격') return '<span class="badge badge-fail">❌ 불합격</span>';
-  return '<span class="badge badge-wait">🔄 결과대기</span>';
+  if (passed === '합격') return `<span class="badge badge-pass">✅ 합격</span>${retry}`;
+  if (passed === '불합격') return `<span class="badge badge-fail">❌ 불합격</span>${retry}`;
+  return `<span class="badge badge-wait">🔄 결과대기</span>${retry}`;
 }
 
 function statusText(used, passed) {
@@ -170,6 +173,14 @@ function statusText(used, passed) {
 }
 
 function isQualified(tasks) {
+  const hasNST = tasks.some(t => t.exam.includes('Network Security'));
+  const hasEFW = tasks.some(t => t.exam.includes('Enterprise Firewall'));
+  if (hasNST || hasEFW) {
+    const nstPass = tasks.some(t => t.exam.includes('Network Security') && t.passed === '합격');
+    const efwPass = tasks.some(t => t.exam.includes('Enterprise Firewall') && t.passed === '합격');
+    return nstPass && efwPass;
+  }
+  // FCP: 두 과목 모두 합격
   const used = tasks.filter(t => t.used === '사용');
   return used.length >= 2 && used.every(t => t.passed === '합격');
 }
@@ -190,8 +201,8 @@ DATA.fcss.forEach(person => {
   if (qual) fcssDone++;
   fcssTbody.innerHTML += `<tr>
     <td class="name-cell">${person.name}</td>
-    <td>${t1 ? badge(t1.used, t1.passed) : '<span class="badge badge-none">⬜ 미배정</span>'}</td>
-    <td>${t2 ? badge(t2.used, t2.passed) : '<span class="badge badge-none">⬜ 미배정</span>'}</td>
+    <td>${badge(t1)}</td>
+    <td>${badge(t2)}</td>
     <td>${qual ? '<span class="acq-done">🏆</span>' : '<span class="acq-no">—</span>'}</td>
   </tr>`;
 });
@@ -208,8 +219,8 @@ DATA.fcp.forEach(person => {
   if (qual) fcpDone++;
   fcpTbody.innerHTML += `<tr>
     <td class="name-cell">${person.name}</td>
-    <td>${t1 ? badge(t1.used, t1.passed) : '<span class="badge badge-none">⬜ 미배정</span>'}</td>
-    <td>${t2 ? badge(t2.used, t2.passed) : '<span class="badge badge-none">⬜ 미배정</span>'}</td>
+    <td>${badge(t1)}</td>
+    <td>${badge(t2)}</td>
     <td>${qual ? '<span class="acq-done">🏆</span>' : '<span class="acq-no">—</span>'}</td>
   </tr>`;
 });
@@ -247,9 +258,11 @@ function buildRowsWithQual(people, qual) {
       '시험1 과목명': t1 ? t1.exam : '',
       '시험1 사용여부': t1 ? t1.used : '',
       '시험1 합격여부': t1 ? statusText(t1.used, t1.passed) : '',
+      '시험1 응시횟수': t1 ? (t1.attempts || 1) : '',
       '시험2 과목명': t2 ? t2.exam : '',
       '시험2 사용여부': t2 ? t2.used : '',
       '시험2 합격여부': t2 ? statusText(t2.used, t2.passed) : '',
+      '시험2 응시횟수': t2 ? (t2.attempts || 1) : '',
       '자격 취득': qualified ? '취득' : '미취득',
     };
   });

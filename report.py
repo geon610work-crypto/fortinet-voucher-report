@@ -36,13 +36,18 @@ def get_cf(task, name):
             return f.get("display_value", "") or ""
     return ""
 
-def count_qualified(people):
-    count = 0
-    for tasks in people.values():
+def is_qualified(tasks):
+    """NST 계열 중 합격 하나 + EFW 계열 중 합격 하나 있으면 취득"""
+    nst_pass = any(t["passed"] == "합격" for t in tasks if "Network Security" in t["exam"])
+    efw_pass = any(t["passed"] == "합격" for t in tasks if "Enterprise Firewall" in t["exam"])
+    # FCP는 두 과목 모두 합격
+    if not any("Network Security" in t["exam"] or "Enterprise Firewall" in t["exam"] for t in tasks):
         used = [t for t in tasks if t["used"] == "사용"]
-        if len(used) >= 2 and all(t["passed"] == "합격" for t in used):
-            count += 1
-    return count
+        return len(used) >= 2 and all(t["passed"] == "합격" for t in used)
+    return nst_pass and efw_pass
+
+def count_qualified(people):
+    return sum(1 for tasks in people.values() if is_qualified(tasks))
 
 def main():
     print("아사나 태스크 불러오는 중...")
@@ -82,18 +87,29 @@ def main():
     date_str = f"{today.year}년 {today.month}월 {today.day}일 ({days[today.weekday()]})"
 
     # JSON 데이터 생성
+    def make_person_data(name, tasks):
+        nst_tasks = [t for t in tasks if "Network Security" in t["exam"]]
+        efw_tasks = [t for t in tasks if "Enterprise Firewall" in t["exam"]]
+        other_tasks = [t for t in tasks if "Network Security" not in t["exam"] and "Enterprise Firewall" not in t["exam"]]
+        def best(tlist):
+            if not tlist: return None
+            passing = [t for t in tlist if t["passed"] == "합격"]
+            return passing[0] if passing else tlist[-1]
+        result = {"name": name, "tasks": []}
+        nst = best(nst_tasks)
+        efw = best(efw_tasks)
+        if nst: result["tasks"].append({"exam": nst["exam"], "used": nst["used"], "passed": nst["passed"], "attempts": len(nst_tasks)})
+        if efw: result["tasks"].append({"exam": efw["exam"], "used": efw["used"], "passed": efw["passed"], "attempts": len(efw_tasks)})
+        for t in other_tasks:
+            result["tasks"].append({"exam": t["exam"], "used": t["used"], "passed": t["passed"], "attempts": 1})
+        return result
+
     report_data = {
         "generated_at": today.isoformat(),
         "fcss_done": fcss_done,
         "fcp_done": fcp_done,
-        "fcss": [
-            {"name": a, "tasks": [{"exam": t["exam"], "used": t["used"], "passed": t["passed"]} for t in tasks]}
-            for a, tasks in fcss_people.items()
-        ],
-        "fcp": [
-            {"name": a, "tasks": [{"exam": t["exam"], "used": t["used"], "passed": t["passed"]} for t in tasks]}
-            for a, tasks in fcp_people.items()
-        ]
+        "fcss": [make_person_data(a, tasks) for a, tasks in fcss_people.items()],
+        "fcp":  [make_person_data(a, tasks) for a, tasks in fcp_people.items()],
     }
 
     # HTML 생성
