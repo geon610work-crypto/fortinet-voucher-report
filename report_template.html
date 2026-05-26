@@ -162,14 +162,14 @@ function badge(task) {
   if (used !== '사용') return '<span class="badge badge-none">⬜ 미사용</span>';
   if (passed === '합격') return `<span class="badge badge-pass">✅ 합격</span>${retry}`;
   if (passed === '불합격') return `<span class="badge badge-fail">❌ 불합격</span>${retry}`;
-  return `<span class="badge badge-wait">🔄 결과대기</span>${retry}`;
+  return `<span class="badge badge-wait">🔄 응시 예정</span>${retry}`;
 }
 
 function statusText(used, passed) {
   if (used !== '사용') return '미사용';
   if (passed === '합격') return '합격';
   if (passed === '불합격') return '불합격';
-  return '결과대기';
+  return '응시 예정';
 }
 
 function isQualified(tasks) {
