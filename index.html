@@ -153,7 +153,7 @@
 </div>
 
 <script>
-const DATA = {"generated_at": "2026-05-26T01:28:07.526808", "fcss_done": 1, "fcp_done": 1, "fcss": [{"name": "박건욱", "tasks": [{"exam": "FCSS - Network Security 7.6 Support Engineer", "used": "사용", "passed": "합격", "attempts": 1}, {"exam": "FCSS - Enterprise Firewall 7.6 Administrator", "used": "사용", "passed": "미정", "attempts": 1}]}, {"name": "김대중", "tasks": [{"exam": "FCSS - Network Security 7.6 Support Engineer", "used": "미사용", "passed": "미정", "attempts": 1}, {"exam": "FCSS - Enterprise Firewall 7.6 Administrator", "used": "미사용", "passed": "미정", "attempts": 1}]}, {"name": "임희대", "tasks": [{"exam": "FCSS - Network Security 7.6 Support Engineer", "used": "사용", "passed": "합격", "attempts": 1}, {"exam": "FCSS - Enterprise Firewall 7.6 Administrator", "used": "사용", "passed": "합격", "attempts": 1}]}, {"name": "김태경", "tasks": [{"exam": "FCSS - Network Security 7.6 Support Engineer", "used": "사용", "passed": "합격", "attempts": 1}, {"exam": "FCSS - Enterprise Firewall 7.6 Administrator", "used": "미사용", "passed": "미정", "attempts": 2}]}], "fcp": [{"name": "김기현", "tasks": [{"exam": "NSE 4 7.6 FortiOS Administrator", "used": "사용", "passed": "합격", "attempts": 1}, {"exam": "NSE 5 7.6 FortiManager Administrator", "used": "사용", "passed": "합격", "attempts": 1}]}]};
+const DATA = {"generated_at": "2026-05-26T01:41:38.674552", "fcss_done": 1, "fcp_done": 1, "fcss": [{"name": "박건욱", "tasks": [{"exam": "FCSS - Network Security 7.6 Support Engineer", "used": "사용", "passed": "합격", "attempts": 1}, {"exam": "FCSS - Enterprise Firewall 7.6 Administrator", "used": "사용", "passed": "미정", "attempts": 1}]}, {"name": "김대중", "tasks": [{"exam": "FCSS - Network Security 7.6 Support Engineer", "used": "미사용", "passed": "미정", "attempts": 1}, {"exam": "FCSS - Enterprise Firewall 7.6 Administrator", "used": "미사용", "passed": "미정", "attempts": 1}]}, {"name": "임희대", "tasks": [{"exam": "FCSS - Network Security 7.6 Support Engineer", "used": "사용", "passed": "합격", "attempts": 1}, {"exam": "FCSS - Enterprise Firewall 7.6 Administrator", "used": "사용", "passed": "합격", "attempts": 1}]}, {"name": "김태경", "tasks": [{"exam": "FCSS - Network Security 7.6 Support Engineer", "used": "사용", "passed": "합격", "attempts": 1}, {"exam": "FCSS - Enterprise Firewall 7.6 Administrator", "used": "미사용", "passed": "미정", "attempts": 2}]}], "fcp": [{"name": "김기현", "tasks": [{"exam": "NSE 4 7.6 FortiOS Administrator", "used": "사용", "passed": "합격", "attempts": 1}, {"exam": "NSE 5 7.6 FortiManager Administrator", "used": "사용", "passed": "합격", "attempts": 1}]}]};
 
 function badge(task) {
   if (!task) return '<span class="badge badge-none">⬜ 미배정</span>';
@@ -162,14 +162,14 @@ function badge(task) {
   if (used !== '사용') return '<span class="badge badge-none">⬜ 미사용</span>';
   if (passed === '합격') return `<span class="badge badge-pass">✅ 합격</span>${retry}`;
   if (passed === '불합격') return `<span class="badge badge-fail">❌ 불합격</span>${retry}`;
-  return `<span class="badge badge-wait">🔄 결과대기</span>${retry}`;
+  return `<span class="badge badge-wait">🔄 응시 예정</span>${retry}`;
 }
 
 function statusText(used, passed) {
   if (used !== '사용') return '미사용';
   if (passed === '합격') return '합격';
   if (passed === '불합격') return '불합격';
-  return '결과대기';
+  return '응시 예정';
 }
 
 function isQualified(tasks) {
