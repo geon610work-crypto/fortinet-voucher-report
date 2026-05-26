@@ -2,7 +2,8 @@ name: 포티넷 NSE 바우처 주간 보고
 
 on:
   schedule:
-    - cron: '0 0 * * 5'
+    - cron: '0 * * * *'    # 매시간 — HTML 페이지 업데이트
+    - cron: '0 0 * * 5'    # 금요일 오전 9시 (KST) — 슬랙 보고
   workflow_dispatch:
 
 permissions:
@@ -28,6 +29,7 @@ jobs:
           SLACK_DM_WEBHOOK_URL: ${{ secrets.SLACK_DM_WEBHOOK_URL }}
           GITHUB_EVENT_NAME: ${{ github.event_name }}
           GITHUB_REPOSITORY: ${{ github.repository }}
+          CRON_SCHEDULE: ${{ github.event.schedule }}
         run: python report.py
 
       - name: GitHub Pages 배포
