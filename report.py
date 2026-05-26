@@ -88,20 +88,14 @@ def main():
 
     # JSON 데이터 생성
     def make_person_data(name, tasks):
-        nst_tasks = [t for t in tasks if "Network Security" in t["exam"]]
-        efw_tasks = [t for t in tasks if "Enterprise Firewall" in t["exam"]]
-        other_tasks = [t for t in tasks if "Network Security" not in t["exam"] and "Enterprise Firewall" not in t["exam"]]
-        def best(tlist):
-            if not tlist: return None
-            passing = [t for t in tlist if t["passed"] == "합격"]
-            return passing[0] if passing else tlist[-1]
+        """아사나 태스크 번호(no) 순서 그대로 전달 - 불합격/재시험 모두 포함"""
         result = {"name": name, "tasks": []}
-        nst = best(nst_tasks)
-        efw = best(efw_tasks)
-        if nst: result["tasks"].append({"exam": nst["exam"], "used": nst["used"], "passed": nst["passed"], "attempts": len(nst_tasks)})
-        if efw: result["tasks"].append({"exam": efw["exam"], "used": efw["used"], "passed": efw["passed"], "attempts": len(efw_tasks)})
-        for t in other_tasks:
-            result["tasks"].append({"exam": t["exam"], "used": t["used"], "passed": t["passed"], "attempts": 1})
+        for t in sorted(tasks, key=lambda x: x["no"]):
+            result["tasks"].append({
+                "exam": t["exam"],
+                "used": t["used"],
+                "passed": t["passed"],
+            })
         return result
 
     # 바우처 소모 현황용 - 모든 태스크 원본 그대로
