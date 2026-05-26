@@ -104,10 +104,34 @@ def main():
             result["tasks"].append({"exam": t["exam"], "used": t["used"], "passed": t["passed"], "attempts": 1})
         return result
 
+    # 바우처 소모 현황용 - 모든 태스크 원본 그대로
+    all_vouchers = []
+    for r in rows:
+        if r["used"] == "사용":
+            all_vouchers.append({
+                "no": r["no"],
+                "code": r["code"],
+                "assignee": r["assignee"],
+                "exam": r["exam"],
+                "qual": r["qual"],
+                "used": r["used"],
+                "passed": r["passed"],
+            })
+
+    # 바우처 전체 통계
+    total = len(rows)
+    used_count = len([r for r in rows if r["used"] == "사용"])
+    fail_count = len([r for r in rows if r["used"] == "사용" and r["passed"] == "불합격"])
+
     report_data = {
         "generated_at": today.isoformat(),
         "fcss_done": fcss_done,
         "fcp_done": fcp_done,
+        "total_vouchers": total,
+        "used_vouchers": used_count,
+        "remain_vouchers": total - used_count,
+        "fail_vouchers": fail_count,
+        "all_vouchers": all_vouchers,
         "fcss": [make_person_data(a, tasks) for a, tasks in fcss_people.items()],
         "fcp":  [make_person_data(a, tasks) for a, tasks in fcp_people.items()],
     }

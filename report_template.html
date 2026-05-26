@@ -149,6 +149,49 @@
     </div>
   </div>
 
+  <div class="section" id="voucher-section">
+    <div class="section-header">
+      <div class="section-dot" style="background:#888780"></div>
+      <div class="section-title">바우처 소모 현황</div>
+    </div>
+    <div class="summary-grid" style="margin-bottom:1rem">
+      <div class="summary-card">
+        <div class="summary-icon" style="background:#f0f0ec">🎟️</div>
+        <div class="summary-info">
+          <div class="summary-label">전체 바우처</div>
+          <div class="summary-value" id="v-total">—</div>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon" style="background:#e8f0fc">📤</div>
+        <div class="summary-info">
+          <div class="summary-label">사용됨</div>
+          <div class="summary-value" style="color:#1a5fb4" id="v-used">—</div>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon" style="background:#e6f4ec">✅</div>
+        <div class="summary-info">
+          <div class="summary-label">잔여</div>
+          <div class="summary-value" style="color:#1d7a4a" id="v-remain">—</div>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon" style="background:#fde8e6">❌</div>
+        <div class="summary-info">
+          <div class="summary-label">불합격</div>
+          <div class="summary-value" style="color:#c0392b" id="v-fail">—</div>
+        </div>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table id="voucher-table">
+        <thead id="voucher-thead"></thead>
+        <tbody id="voucher-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
   <div class="footer">Fortinet NSE 바우처 관리 시스템</div>
 </div>
 
@@ -228,6 +271,8 @@ document.getElementById('fcp-done').textContent = fcpDone;
 document.getElementById('fcp-badge').textContent = `${fcpDone} / 1명`;
 document.getElementById('fcp-bar').style.width = `${Math.round(fcpDone/1*100)}%`;
 
+renderVouchers();
+
 function buildRows(people) {
   return people.map(person => {
     const t1 = person.tasks[0];
@@ -245,6 +290,59 @@ function buildRows(people) {
       '자격 취득': qual ? '취득' : '미취득',
     };
   });
+}
+
+function renderVouchers() {
+  document.getElementById('v-total').textContent = DATA.total_vouchers;
+  document.getElementById('v-used').textContent = DATA.used_vouchers;
+  document.getElementById('v-remain').textContent = DATA.remain_vouchers;
+  document.getElementById('v-fail').textContent = DATA.fail_vouchers;
+
+  // 담당자별로 묶기
+  const byPerson = {};
+  DATA.all_vouchers.forEach(v => {
+    if (!byPerson[v.assignee]) byPerson[v.assignee] = [];
+    byPerson[v.assignee].push(v);
+  });
+
+  // 최대 시험 수 계산
+  const maxExams = Math.max(...Object.values(byPerson).map(t => t.length), 2);
+
+  // 헤더 생성
+  const thead = document.getElementById('voucher-thead');
+  let headerHtml = '<tr><th>담당자</th><th style="text-align:center">사용 수</th>';
+  for (let i = 1; i <= maxExams; i++) {
+    headerHtml += `<th style="text-align:center;border-left:0.5px solid var(--border)">시험 ${i} 과목</th><th style="text-align:center">결과</th>`;
+  }
+  headerHtml += '</tr>';
+  thead.innerHTML = headerHtml;
+
+  // 행 생성
+  const tbody = document.getElementById('voucher-tbody');
+  let rowsHtml = '';
+  Object.entries(byPerson).forEach(([name, tasks]) => {
+    let row = `<tr><td style="font-weight:500">${name}</td><td style="text-align:center;font-family:var(--font-mono)">${tasks.length}</td>`;
+    for (let i = 0; i < maxExams; i++) {
+      const t = tasks[i];
+      const borderStyle = 'border-left:0.5px solid var(--border)';
+      if (t) {
+        const examShort = t.exam.includes('Network Security') ? 'NST'
+          : t.exam.includes('Enterprise Firewall') ? 'EFW'
+          : t.exam.includes('FortiManager') ? 'FMG'
+          : t.exam.includes('FortiOS') ? 'FOS'
+          : t.exam.split(' ').slice(0,2).join(' ');
+        const b = t.passed === '합격' ? '<span class="badge badge-pass">✅ 합격</span>'
+          : t.passed === '불합격' ? '<span class="badge badge-fail">❌ 불합격</span>'
+          : '<span class="badge badge-wait">🔄 응시 예정</span>';
+        row += `<td style="text-align:center;${borderStyle}"><span style="font-size:12px;color:var(--muted)">${examShort}</span></td><td style="text-align:center">${b}</td>`;
+      } else {
+        row += `<td style="text-align:center;color:var(--muted);${borderStyle}">—</td><td style="text-align:center;color:var(--muted)">—</td>`;
+      }
+    }
+    row += '</tr>';
+    rowsHtml += row;
+  });
+  tbody.innerHTML = rowsHtml;
 }
 
 function buildRowsWithQual(people, qual) {
