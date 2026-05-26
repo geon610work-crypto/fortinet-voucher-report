@@ -10,6 +10,8 @@ ASANA_PROJECT_GID = os.environ["ASANA_PROJECT_GID"]
 SLACK_WEBHOOK_URL = os.environ["SLACK_WEBHOOK_URL"]
 SLACK_DM_WEBHOOK_URL = os.environ.get("SLACK_DM_WEBHOOK_URL", "")
 IS_MANUAL = os.environ.get("GITHUB_EVENT_NAME", "") == "workflow_dispatch"
+# 금요일 오전 9시 슬랙 보고용 cron인지 확인
+IS_SLACK_RUN = os.environ.get("CRON_SCHEDULE", "") == "0 0 * * 5"
 GITHUB_REPO = os.environ.get("GITHUB_REPOSITORY", "")
 PAGES_URL = f"https://{GITHUB_REPO.split('/')[0]}.github.io/{GITHUB_REPO.split('/')[1]}"
 
@@ -120,19 +122,22 @@ def main():
     ]
     msg = mention_line + "\n".join(msg_lines)
 
-    webhook = SLACK_DM_WEBHOOK_URL if IS_MANUAL and SLACK_DM_WEBHOOK_URL else SLACK_WEBHOOK_URL
-    target = "DM" if IS_MANUAL and SLACK_DM_WEBHOOK_URL else "채널"
-
-    print(f"슬랙 {target}에 전송 중...")
-    payload = json.dumps({"text": msg}).encode("utf-8")
-    req = urllib.request.Request(
-        webhook,
-        data=payload,
-        headers={"Content-Type": "application/json"},
-        method="POST"
-    )
-    with urllib.request.urlopen(req) as res:
-        print(f"슬랙 전송 완료: {res.status}")
+    # 금요일 슬랙 보고 스케줄 또는 수동실행일 때만 슬랙 전송
+    if IS_SLACK_RUN or IS_MANUAL:
+        webhook = SLACK_DM_WEBHOOK_URL if IS_MANUAL and SLACK_DM_WEBHOOK_URL else SLACK_WEBHOOK_URL
+        target = "DM" if IS_MANUAL and SLACK_DM_WEBHOOK_URL else "채널"
+        print(f"슬랙 {target}에 전송 중...")
+        payload = json.dumps({"text": msg}).encode("utf-8")
+        req = urllib.request.Request(
+            webhook,
+            data=payload,
+            headers={"Content-Type": "application/json"},
+            method="POST"
+        )
+        with urllib.request.urlopen(req) as res:
+            print(f"슬랙 전송 완료: {res.status}")
+    else:
+        print("HTML 페이지만 업데이트 (슬랙 전송 생략)")
 
 if __name__ == "__main__":
     main()
