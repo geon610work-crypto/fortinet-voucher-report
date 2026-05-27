@@ -130,12 +130,12 @@ def main():
         "fcp":  [make_person_data(a, tasks) for a, tasks in fcp_people.items()],
     }
 
-    # HTML 생성
+    # HTML 생성 - 아사나 프로젝트 GID만 주입 (데이터는 페이지 로드시 실시간으로 가져옴)
     print("HTML 보고서 생성 중...")
     with open("report_template.html", "r", encoding="utf-8") as f:
         template = f.read()
 
-    html = template.replace("__REPORT_DATA__", json.dumps(report_data, ensure_ascii=False))
+    html = template.replace("__ASANA_PROJECT_GID__", ASANA_PROJECT_GID)
 
     os.makedirs("docs", exist_ok=True)
     with open("docs/index.html", "w", encoding="utf-8") as f:
