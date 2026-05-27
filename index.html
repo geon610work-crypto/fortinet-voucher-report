@@ -245,8 +245,15 @@ function renderAll() {
   const days = ['일','월','화','수','목','금','토'];
   document.getElementById('report-date').textContent =
     `${now.getFullYear()}년 ${now.getMonth()+1}월 ${now.getDate()}일 (${days[now.getDay()]})`;
+  const diffMs = Date.now() - now.getTime();
+  const diffMin = Math.floor(diffMs / 60000);
+  const diffHour = Math.floor(diffMin / 60);
+  let diffStr = diffMin < 1 ? '방금 전'
+    : diffMin < 60 ? `${diffMin}분 전`
+    : diffHour < 24 ? `${diffHour}시간 전`
+    : `${Math.floor(diffHour/24)}일 전`;
   document.getElementById('last-updated').textContent =
-    `업데이트: ${now.toLocaleString('ko-KR', {month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})}`;
+    `데이터 기준: ${now.getFullYear()}.${now.getMonth()+1}.${now.getDate()} ${now.toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})} (${diffStr})`;
 
   const fcss = DATA.fcss || [];
   const fcp  = DATA.fcp  || [];
