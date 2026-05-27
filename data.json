@@ -1,0 +1,167 @@
+{
+  "generated_at": "2026-05-27T01:04:04.090045",
+  "fcss_done": 1,
+  "fcp_done": 1,
+  "total_vouchers": 12,
+  "used_vouchers": 8,
+  "remain_vouchers": 4,
+  "fail_vouchers": 1,
+  "all_vouchers": [
+    {
+      "no": 1,
+      "code": "FTE2544E3106",
+      "assignee": "박건욱",
+      "exam": "FCSS - Network Security 7.6 Support Engineer",
+      "qual": "FCSS",
+      "used": "사용",
+      "passed": "합격"
+    },
+    {
+      "no": 2,
+      "code": "FTE278896A65",
+      "assignee": "박건욱",
+      "exam": "FCSS - Enterprise Firewall 7.6 Administrator",
+      "qual": "FCSS",
+      "used": "사용",
+      "passed": "미정"
+    },
+    {
+      "no": 5,
+      "code": "FTE254500125",
+      "assignee": "임희대",
+      "exam": "FCSS - Network Security 7.6 Support Engineer",
+      "qual": "FCSS",
+      "used": "사용",
+      "passed": "합격"
+    },
+    {
+      "no": 6,
+      "code": "FTE2788C2A5F",
+      "assignee": "임희대",
+      "exam": "FCSS - Enterprise Firewall 7.6 Administrator",
+      "qual": "FCSS",
+      "used": "사용",
+      "passed": "합격"
+    },
+    {
+      "no": 7,
+      "code": "FTE2788C745B",
+      "assignee": "김태경",
+      "exam": "FCSS - Enterprise Firewall 7.6 Administrator",
+      "qual": "FCSS",
+      "used": "사용",
+      "passed": "불합격"
+    },
+    {
+      "no": 8,
+      "code": "FTE278914737",
+      "assignee": "김태경",
+      "exam": "FCSS - Network Security 7.6 Support Engineer",
+      "qual": "FCSS",
+      "used": "사용",
+      "passed": "합격"
+    },
+    {
+      "no": 9,
+      "code": "FTE27896255C",
+      "assignee": "김기현",
+      "exam": "NSE 4 7.6 FortiOS Administrator",
+      "qual": "FCP",
+      "used": "사용",
+      "passed": "합격"
+    },
+    {
+      "no": 10,
+      "code": "FTE279027E40",
+      "assignee": "김기현",
+      "exam": "NSE 5 7.6 FortiManager Administrator",
+      "qual": "FCP",
+      "used": "사용",
+      "passed": "합격"
+    }
+  ],
+  "fcss": [
+    {
+      "name": "박건욱",
+      "tasks": [
+        {
+          "exam": "FCSS - Network Security 7.6 Support Engineer",
+          "used": "사용",
+          "passed": "합격"
+        },
+        {
+          "exam": "FCSS - Enterprise Firewall 7.6 Administrator",
+          "used": "사용",
+          "passed": "미정"
+        }
+      ]
+    },
+    {
+      "name": "김대중",
+      "tasks": [
+        {
+          "exam": "FCSS - Network Security 7.6 Support Engineer",
+          "used": "미사용",
+          "passed": "미정"
+        },
+        {
+          "exam": "FCSS - Enterprise Firewall 7.6 Administrator",
+          "used": "미사용",
+          "passed": "미정"
+        }
+      ]
+    },
+    {
+      "name": "임희대",
+      "tasks": [
+        {
+          "exam": "FCSS - Network Security 7.6 Support Engineer",
+          "used": "사용",
+          "passed": "합격"
+        },
+        {
+          "exam": "FCSS - Enterprise Firewall 7.6 Administrator",
+          "used": "사용",
+          "passed": "합격"
+        }
+      ]
+    },
+    {
+      "name": "김태경",
+      "tasks": [
+        {
+          "exam": "FCSS - Enterprise Firewall 7.6 Administrator",
+          "used": "사용",
+          "passed": "불합격"
+        },
+        {
+          "exam": "FCSS - Network Security 7.6 Support Engineer",
+          "used": "사용",
+          "passed": "합격"
+        },
+        {
+          "exam": "FCSS - Enterprise Firewall 7.6 Administrator",
+          "used": "미사용",
+          "passed": "미정"
+        }
+      ]
+    }
+  ],
+  "fcp": [
+    {
+      "name": "김기현",
+      "tasks": [
+        {
+          "exam": "NSE 4 7.6 FortiOS Administrator",
+          "used": "사용",
+          "passed": "합격"
+        },
+        {
+          "exam": "NSE 5 7.6 FortiManager Administrator",
+          "used": "사용",
+          "passed": "합격"
+        }
+      ]
+    }
+  ]
+}
