@@ -15,94 +15,67 @@
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:2.5rem 1rem}
-  .container{max-width:860px;margin:0 auto}
-
-  /* Header */
+  .container{max-width:900px;margin:0 auto}
   .header{margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1.5px solid var(--border)}
   .header-top{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap}
   .header h1{font-size:22px;font-weight:600;letter-spacing:-0.3px}
   .header .date{font-size:13px;color:var(--muted);margin-top:4px;font-family:'DM Mono',monospace}
   .header-right{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
   .last-updated{font-size:12px;color:var(--muted);font-family:'DM Mono',monospace}
-  .export-btns{display:flex;gap:8px}
-  .export-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--card);color:var(--text);font-family:'Noto Sans KR',sans-serif;transition:background 0.15s}
-  .export-btn:hover{background:#f0f0ec}
-  .export-btn.csv{border-color:#1d7a4a;color:#1d7a4a}
-  .export-btn.csv:hover{background:#e6f4ec}
-  .export-btn.excel{border-color:#1a5fb4;color:#1a5fb4}
-  .export-btn.excel:hover{background:#e8f0fc}
-  .refresh-btn{border-color:#888;color:#555}
-  .refresh-btn:hover{background:#f0f0ec}
-
-  /* Loading */
+  .btn-row{display:flex;gap:8px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--card);color:var(--text);font-family:'Noto Sans KR',sans-serif;transition:background 0.15s}
+  .btn:hover{background:#f0f0ec}
+  .btn.csv{border-color:#1d7a4a;color:#1d7a4a}.btn.csv:hover{background:#e6f4ec}
+  .btn.excel{border-color:#1a5fb4;color:#1a5fb4}.btn.excel:hover{background:#e8f0fc}
   .loading{text-align:center;padding:4rem 1rem;color:var(--muted)}
   .spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--fcss);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 12px}
   @keyframes spin{to{transform:rotate(360deg)}}
-  .error-box{background:#fde8e6;border:1px solid #f5c6c6;border-radius:10px;padding:1rem 1.25rem;color:#c0392b;font-size:13px;margin-bottom:1rem}
-
-  /* Summary */
+  .error-box{background:#fde8e6;border:1px solid #f5c6c6;border-radius:10px;padding:1rem 1.25rem;color:#c0392b;font-size:13px;margin-bottom:1rem;display:none}
   .summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:2rem}
   .summary-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;display:flex;align-items:center;gap:1rem}
   .summary-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-  .summary-icon.fcss{background:var(--fcss-bg)}
-  .summary-icon.fcp{background:var(--fcp-bg)}
+  .summary-icon.fcss{background:var(--fcss-bg)}.summary-icon.fcp{background:var(--fcp-bg)}
   .summary-info{flex:1}
   .summary-label{font-size:12px;color:var(--muted);font-weight:500;margin-bottom:4px}
   .summary-value{font-size:20px;font-weight:600;font-family:'DM Mono',monospace}
   .summary-goal{font-size:13px;color:var(--muted)}
   .progress-bar{height:4px;background:var(--border);border-radius:2px;margin-top:8px;overflow:hidden}
-  .progress-fill{height:100%;border-radius:2px;transition:width 0.6s ease}
-  .progress-fill.fcss{background:var(--fcss)}
-  .progress-fill.fcp{background:var(--fcp)}
-
-  /* Section */
+  .progress-fill{height:100%;border-radius:2px}
+  .progress-fill.fcss{background:var(--fcss)}.progress-fill.fcp{background:var(--fcp)}
   .section{margin-bottom:2rem}
   .section-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
   .section-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-  .section-dot.fcss{background:var(--fcss)}
-  .section-dot.fcp{background:var(--fcp)}
-  .section-dot.gray{background:#888780}
+  .section-dot.fcss{background:var(--fcss)}.section-dot.fcp{background:var(--fcp)}.section-dot.gray{background:#888780}
   .section-title{font-size:15px;font-weight:600}
   .section-badge{font-size:12px;padding:2px 10px;border-radius:100px;font-family:'DM Mono',monospace;font-weight:500}
-  .section-badge.fcss{background:var(--fcss-bg);color:var(--fcss)}
-  .section-badge.fcp{background:var(--fcp-bg);color:var(--fcp)}
-
-  /* Table */
+  .section-badge.fcss{background:var(--fcss-bg);color:var(--fcss)}.section-badge.fcp{background:var(--fcp-bg);color:var(--fcp)}
   .table-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;overflow-x:auto}
-  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
   thead tr{background:var(--bg);border-bottom:1px solid var(--border)}
-  th{padding:10px 16px;font-size:11.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;text-align:left;white-space:nowrap}
-  th.center{text-align:center}
+  th{padding:10px 16px;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;text-align:left;white-space:nowrap}
+  th.c{text-align:center}
   td{padding:11px 16px;border-bottom:1px solid var(--border);vertical-align:middle}
-  td.center{text-align:center}
+  td.c{text-align:center}
   tr:last-child td{border-bottom:none}
   tr:hover td{background:#fafaf8}
   .name-cell{font-weight:500;font-size:14px}
-  .divider-col{border-left:1px solid var(--border)}
-
-  /* Badges */
+  .div-col{border-left:1px solid var(--border)}
   .badge{display:inline-flex;align-items:center;gap:4px;font-size:12px;padding:3px 10px;border-radius:100px;font-weight:500;white-space:nowrap}
-  .badge-pass{background:var(--pass-bg);color:var(--pass)}
-  .badge-wait{background:var(--wait-bg);color:var(--wait)}
-  .badge-none{background:var(--none-bg);color:var(--none)}
-  .badge-fail{background:var(--fail-bg);color:var(--fail)}
-  .acq-done{font-size:16px}
-  .acq-no{font-size:16px;color:#ddd}
-
-  /* Voucher stat cards */
+  .b-pass{background:var(--pass-bg);color:var(--pass)}
+  .b-wait{background:var(--wait-bg);color:var(--wait)}
+  .b-none{background:var(--none-bg);color:var(--none)}
+  .b-fail{background:var(--fail-bg);color:var(--fail)}
+  .acq-y{font-size:16px}.acq-n{font-size:16px;color:#ddd}
   .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1rem}
   .stat-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem}
   .stat-label{font-size:12px;color:var(--muted);margin-bottom:4px}
   .stat-value{font-size:22px;font-weight:600;font-family:'DM Mono',monospace}
-
   .footer{text-align:center;font-size:12px;color:var(--muted);margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);font-family:'DM Mono',monospace}
   .hidden{display:none}
 </style>
 </head>
 <body>
 <div class="container">
-
-  <!-- Header -->
   <div class="header">
     <div class="header-top">
       <div>
@@ -111,27 +84,19 @@
       </div>
       <div class="header-right">
         <div class="last-updated" id="last-updated"></div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="export-btn refresh-btn" onclick="loadData()">↻ 새로고침</button>
-          <button class="export-btn csv" onclick="downloadCSV()">⬇ CSV</button>
-          <button class="export-btn excel" onclick="downloadExcel()">⬇ 엑셀</button>
+        <div class="btn-row">
+          <button class="btn" onclick="loadData()">↻ 새로고침</button>
+          <button class="btn csv" onclick="downloadCSV()">⬇ CSV</button>
+          <button class="btn excel" onclick="downloadExcel()">⬇ 엑셀</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Loading -->
-  <div id="loading-state" class="loading">
-    <div class="spinner"></div>
-    <div>아사나에서 데이터를 불러오는 중...</div>
-  </div>
+  <div id="loading" class="loading"><div class="spinner"></div><div>데이터 불러오는 중...</div></div>
+  <div id="error" class="error-box"></div>
 
-  <!-- Error -->
-  <div id="error-state" class="error-box hidden"></div>
-
-  <!-- Content -->
   <div id="content" class="hidden">
-    <!-- Summary -->
     <div class="summary-grid">
       <div class="summary-card">
         <div class="summary-icon fcss">🔵</div>
@@ -151,27 +116,24 @@
       </div>
     </div>
 
-    <!-- FCSS -->
     <div class="section">
       <div class="section-header">
         <div class="section-dot fcss"></div>
         <div class="section-title">FCSS 현황</div>
         <div class="section-badge fcss" id="fcss-badge"></div>
       </div>
-      <div class="table-wrap"><table><thead id="fcss-thead"></thead><tbody id="fcss-tbody"></tbody></table></div>
+      <div class="table-wrap"><table><thead id="fcss-th"></thead><tbody id="fcss-tb"></tbody></table></div>
     </div>
 
-    <!-- FCP -->
     <div class="section">
       <div class="section-header">
         <div class="section-dot fcp"></div>
         <div class="section-title">FCP 현황</div>
         <div class="section-badge fcp" id="fcp-badge"></div>
       </div>
-      <div class="table-wrap"><table><thead id="fcp-thead"></thead><tbody id="fcp-tbody"></tbody></table></div>
+      <div class="table-wrap"><table><thead id="fcp-th"></thead><tbody id="fcp-tb"></tbody></table></div>
     </div>
 
-    <!-- Voucher Usage -->
     <div class="section">
       <div class="section-header">
         <div class="section-dot gray"></div>
@@ -183,238 +145,160 @@
         <div class="stat-card"><div class="stat-label">잔여</div><div class="stat-value" style="color:#1d7a4a" id="v-remain">—</div></div>
         <div class="stat-card"><div class="stat-label">불합격</div><div class="stat-value" style="color:#c0392b" id="v-fail">—</div></div>
       </div>
-      <div class="table-wrap"><table><thead id="v-thead"></thead><tbody id="v-tbody"></tbody></table></div>
+      <div class="table-wrap"><table><thead id="v-th"></thead><tbody id="v-tb"></tbody></table></div>
     </div>
   </div>
 
-  <div class="footer">Fortinet NSE 바우처 관리 시스템 · 실시간 연동</div>
+  <div class="footer">Fortinet NSE 바우처 관리 시스템</div>
 </div>
 
 <script>
-const ASANA_PROJECT_GID = '__ASANA_PROJECT_GID__';
-const FCSS_GOAL = 3;
-const FCP_GOAL  = 1;
-const TOTAL_VOUCHERS = 12;
-
-let cachedData = null;
+const FCSS_GOAL = 3, FCP_GOAL = 1;
+let DATA = null;
 
 function badge(task) {
-  if (!task || task.used !== '사용') return '<span class="badge badge-none">⬜ 미사용</span>';
-  if (task.passed === '합격')    return '<span class="badge badge-pass">✅ 합격</span>';
-  if (task.passed === '불합격')  return '<span class="badge badge-fail">❌ 불합격</span>';
-  return '<span class="badge badge-wait">🔄 응시 예정</span>';
+  if (!task || task.used !== '사용') return '<span class="badge b-none">⬜ 미사용</span>';
+  if (task.passed === '합격')   return '<span class="badge b-pass">✅ 합격</span>';
+  if (task.passed === '불합격') return '<span class="badge b-fail">❌ 불합격</span>';
+  return '<span class="badge b-wait">🔄 응시 예정</span>';
 }
 
 function statusText(task) {
   if (!task || task.used !== '사용') return '미사용';
-  if (task.passed === '합격')    return '합격';
-  if (task.passed === '불합격')  return '불합격';
+  if (task.passed === '합격')   return '합격';
+  if (task.passed === '불합격') return '불합격';
   return '응시 예정';
 }
 
-function shorten(exam) {
-  if (!exam) return '-';
-  if (exam.includes('Network Security'))   return 'NST';
-  if (exam.includes('Enterprise Firewall')) return 'EFW';
-  if (exam.includes('FortiManager'))       return 'FMG';
-  if (exam.includes('FortiOS'))            return 'FOS';
-  return exam.split(' ').slice(0,2).join(' ');
+function isQualFCSS(tasks) {
+  return tasks.some(t => t.exam.includes('Network Security')    && t.passed === '합격') &&
+         tasks.some(t => t.exam.includes('Enterprise Firewall') && t.passed === '합격');
 }
-
-function isQualifiedFCSS(tasks) {
-  const nstPass = tasks.some(t => t.exam.includes('Network Security')   && t.passed === '합격');
-  const efwPass = tasks.some(t => t.exam.includes('Enterprise Firewall') && t.passed === '합격');
-  return nstPass && efwPass;
-}
-
-function isQualifiedFCP(tasks) {
+function isQualFCP(tasks) {
   const used = tasks.filter(t => t.used === '사용');
   return used.length >= 2 && used.every(t => t.passed === '합격');
 }
 
-async function fetchAsanaData() {
-  const prompt = `아사나 프로젝트 GID "${ASANA_PROJECT_GID}"의 모든 태스크를 가져와줘.
-각 태스크에서 다음 정보를 추출해서 JSON으로만 응답해줘 (다른 텍스트 없이):
-{
-  "tasks": [
-    {
-      "no": 태스크이름에서_대괄호_숫자,
-      "code": 바우처코드,
-      "assignee": 담당자이름_또는_null,
-      "used": 사용여부_커스텀필드값,
-      "passed": 합격여부_커스텀필드값,
-      "exam": 시험_커스텀필드값,
-      "qual": 자격_커스텀필드값
-    }
-  ]
-}
-사용여부가 없으면 "미사용", 합격여부가 없으면 "미정"으로 해줘.`;
+function renderQualTable(thId, tbId, people, isQualFn) {
+  const maxT = Math.max(...people.map(p => p.tasks.length), 2);
+  let th = '<tr><th>담당자</th>';
+  for (let i = 1; i <= maxT; i++)
+    th += `<th class="c${i>1?' div-col':''}">시험 ${i} 과목</th><th class="c">결과</th>`;
+  th += '<th class="c">자격 취득</th></tr>';
+  document.getElementById(thId).innerHTML = th;
 
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 4000,
-      mcp_servers: [{
-        type: 'url',
-        url: 'https://mcp.asana.com/sse',
-        name: 'asana-mcp'
-      }],
-      messages: [{role: 'user', content: prompt}]
-    })
-  });
-
-  const data = await response.json();
-  const text = data.content.filter(b => b.type === 'text').map(b => b.text).join('');
-  const jsonMatch = text.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) throw new Error('JSON 파싱 실패');
-  return JSON.parse(jsonMatch[0]);
-}
-
-function processData(raw) {
-  const rows = (raw.tasks || []).sort((a,b) => (a.no||0) - (b.no||0));
-
-  // 담당자+자격별 그룹
-  const groups = {};
-  rows.forEach(r => {
-    const key = `${r.assignee||'미배정'}__${r.qual||''}`;
-    if (!groups[key]) groups[key] = {assignee: r.assignee||'미배정', qual: r.qual||'', tasks: []};
-    groups[key].tasks.push(r);
-  });
-
-  const fcss = Object.values(groups).filter(g => g.qual === 'FCSS');
-  const fcp  = Object.values(groups).filter(g => g.qual === 'FCP');
-
-  const usedCount = rows.filter(r => r.used === '사용').length;
-  const failCount = rows.filter(r => r.used === '사용' && r.passed === '불합격').length;
-
-  return {rows, fcss, fcp, usedCount, failCount, total: rows.length};
-}
-
-function renderTable(theadId, tbodyId, people, isQualFn) {
-  const maxExams = Math.max(...people.map(p => p.tasks.length), 2);
-
-  let headerHtml = '<tr><th>담당자</th>';
-  for (let i = 1; i <= maxExams; i++) {
-    headerHtml += `<th class="center${i>1?' divider-col':''}">시험 ${i}</th><th class="center">결과</th>`;
-  }
-  headerHtml += '<th class="center">자격 취득</th></tr>';
-  document.getElementById(theadId).innerHTML = headerHtml;
-
-  let bodyHtml = '';
+  let tb = '';
   people.forEach(p => {
     const qual = isQualFn(p.tasks);
-    let row = `<tr><td class="name-cell">${p.name || p.assignee}</td>`;
-    for (let i = 0; i < maxExams; i++) {
+    let row = `<tr><td class="name-cell">${p.name}</td>`;
+    for (let i = 0; i < maxT; i++) {
       const t = p.tasks[i];
-      const examLabel = t ? `<span style="font-size:11px;color:var(--muted)">${t.exam || '-'}</span>` : '—';
-      const borderStyle = i > 0 ? ' divider-col' : '';
-      row += `<td class="center${borderStyle}" style="font-size:12px">${examLabel}</td>`;
-      row += `<td class="center">${badge(t)}</td>`;
+      const dc = i > 0 ? ' div-col' : '';
+      row += `<td class="c${dc}" style="font-size:11px;color:var(--muted)">${t ? t.exam : '—'}</td>`;
+      row += `<td class="c">${badge(t)}</td>`;
     }
-    row += `<td class="center">${qual ? '<span class="acq-done">🏆</span>' : '<span class="acq-no">—</span>'}</td></tr>`;
-    bodyHtml += row;
+    row += `<td class="c">${qual ? '<span class="acq-y">🏆</span>' : '<span class="acq-n">—</span>'}</td></tr>`;
+    tb += row;
   });
-  document.getElementById(tbodyId).innerHTML = bodyHtml;
+  document.getElementById(tbId).innerHTML = tb;
 }
 
-function renderVouchers(data) {
-  document.getElementById('v-total').textContent  = data.total;
-  document.getElementById('v-used').textContent   = data.usedCount;
-  document.getElementById('v-remain').textContent = data.total - data.usedCount;
-  document.getElementById('v-fail').textContent   = data.failCount;
+function renderVouchers() {
+  document.getElementById('v-total').textContent  = DATA.total_vouchers;
+  document.getElementById('v-used').textContent   = DATA.used_vouchers;
+  document.getElementById('v-remain').textContent = DATA.remain_vouchers;
+  document.getElementById('v-fail').textContent   = DATA.fail_vouchers;
 
-  // 담당자별 그룹 (자격 무관)
+  // 담당자별 사용 바우처 그룹 (all_vouchers)
   const byPerson = {};
-  data.rows.filter(r => r.used === '사용').forEach(r => {
-    const name = r.assignee || '미배정';
-    if (!byPerson[name]) byPerson[name] = [];
-    byPerson[name].push(r);
+  (DATA.all_vouchers || []).forEach(v => {
+    const n = v.assignee || '미배정';
+    if (!byPerson[n]) byPerson[n] = [];
+    byPerson[n].push(v);
   });
 
-  const maxExams = Math.max(...Object.values(byPerson).map(t => t.length), 2);
+  const maxT = Math.max(...Object.values(byPerson).map(t => t.length), 2);
 
-  let headerHtml = '<tr><th>담당자</th><th class="center">사용 수</th>';
-  for (let i = 1; i <= maxExams; i++) {
-    headerHtml += `<th class="center divider-col">시험 ${i} 과목</th><th class="center">결과</th>`;
-  }
-  headerHtml += '</tr>';
-  document.getElementById('v-thead').innerHTML = headerHtml;
+  let th = '<tr><th>담당자</th><th class="c">사용 수</th>';
+  for (let i = 1; i <= maxT; i++)
+    th += `<th class="c div-col">시험 ${i} 과목</th><th class="c">결과</th>`;
+  th += '</tr>';
+  document.getElementById('v-th').innerHTML = th;
 
-  let bodyHtml = '';
+  let tb = '';
   Object.entries(byPerson).forEach(([name, tasks]) => {
-    let row = `<tr><td class="name-cell">${name}</td><td class="center" style="font-family:'DM Mono',monospace">${tasks.length}</td>`;
-    for (let i = 0; i < maxExams; i++) {
+    let row = `<tr><td class="name-cell">${name}</td>`;
+    row += `<td class="c" style="font-family:'DM Mono',monospace">${tasks.length}</td>`;
+    for (let i = 0; i < maxT; i++) {
       const t = tasks[i];
-      row += `<td class="center divider-col" style="font-size:12px;color:var(--muted)">${t ? t.exam : '—'}</td>`;
-      row += `<td class="center">${t ? badge(t) : '<span style="color:#ddd">—</span>'}</td>`;
+      row += `<td class="c div-col" style="font-size:11px;color:var(--muted)">${t ? t.exam : '—'}</td>`;
+      row += `<td class="c">${t ? badge(t) : '<span style="color:#ddd">—</span>'}</td>`;
     }
     row += '</tr>';
-    bodyHtml += row;
+    tb += row;
   });
-  document.getElementById('v-tbody').innerHTML = bodyHtml;
+  document.getElementById('v-tb').innerHTML = tb;
 }
 
-function renderAll(data) {
-  cachedData = data;
-  const processed = processData(data);
-
-  // 날짜
-  const now = new Date();
+function renderAll() {
+  const now = new Date(DATA.generated_at);
   const days = ['일','월','화','수','목','금','토'];
   document.getElementById('report-date').textContent =
     `${now.getFullYear()}년 ${now.getMonth()+1}월 ${now.getDate()}일 (${days[now.getDay()]})`;
   document.getElementById('last-updated').textContent =
-    `업데이트: ${now.toLocaleTimeString('ko-KR', {hour:'2-digit', minute:'2-digit'})}`;
+    `업데이트: ${now.toLocaleString('ko-KR', {month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})}`;
 
-  // FCSS
-  const fcssDone = processed.fcss.filter(p => isQualifiedFCSS(p.tasks)).length;
+  const fcss = DATA.fcss || [];
+  const fcp  = DATA.fcp  || [];
+
+  const fcssDone = fcss.filter(p => isQualFCSS(p.tasks)).length;
   document.getElementById('fcss-done').textContent = fcssDone;
   document.getElementById('fcss-badge').textContent = `${fcssDone} / ${FCSS_GOAL}명`;
   document.getElementById('fcss-bar').style.width = `${Math.round(fcssDone/FCSS_GOAL*100)}%`;
-  renderTable('fcss-thead', 'fcss-tbody', processed.fcss, isQualifiedFCSS);
+  renderQualTable('fcss-th', 'fcss-tb', fcss, isQualFCSS);
 
-  // FCP
-  const fcpDone = processed.fcp.filter(p => isQualifiedFCP(p.tasks)).length;
+  const fcpDone = fcp.filter(p => isQualFCP(p.tasks)).length;
   document.getElementById('fcp-done').textContent = fcpDone;
   document.getElementById('fcp-badge').textContent = `${fcpDone} / ${FCP_GOAL}명`;
   document.getElementById('fcp-bar').style.width = `${Math.round(fcpDone/FCP_GOAL*100)}%`;
-  renderTable('fcp-thead', 'fcp-tbody', processed.fcp, isQualifiedFCP);
+  renderQualTable('fcp-th', 'fcp-tb', fcp, isQualFCP);
 
-  // 바우처 소모
-  renderVouchers(processed);
+  renderVouchers();
 }
 
 async function loadData() {
-  document.getElementById('loading-state').classList.remove('hidden');
+  document.getElementById('loading').classList.remove('hidden');
   document.getElementById('content').classList.add('hidden');
-  document.getElementById('error-state').classList.add('hidden');
-
+  document.getElementById('error').style.display = 'none';
   try {
-    const raw = await fetchAsanaData();
-    document.getElementById('loading-state').classList.add('hidden');
+    const res = await fetch('data.json?t=' + Date.now());
+    if (!res.ok) throw new Error(`data.json 로드 실패 (${res.status})`);
+    DATA = await res.json();
+    document.getElementById('loading').classList.add('hidden');
     document.getElementById('content').classList.remove('hidden');
-    renderAll(raw);
+    renderAll();
   } catch(e) {
-    document.getElementById('loading-state').classList.add('hidden');
-    document.getElementById('error-state').classList.remove('hidden');
-    document.getElementById('error-state').textContent = '데이터 불러오기 실패: ' + e.message;
+    document.getElementById('loading').classList.add('hidden');
+    const err = document.getElementById('error');
+    err.style.display = 'block';
+    err.textContent = '데이터 불러오기 실패: ' + e.message;
   }
 }
 
 function buildExportRows() {
-  if (!cachedData) return [];
-  const processed = processData(cachedData);
+  if (!DATA) return [];
   const rows = [];
-  [...processed.fcss, ...processed.fcp].forEach(p => {
-    const t1 = p.tasks[0], t2 = p.tasks[1], t3 = p.tasks[2];
+  [...(DATA.fcss||[]), ...(DATA.fcp||[])].forEach(p => {
+    const t1=p.tasks[0], t2=p.tasks[1], t3=p.tasks[2];
+    const qual = p.tasks.some(t=>t.exam.includes('Network Security')&&t.passed==='합격') &&
+                 p.tasks.some(t=>t.exam.includes('Enterprise Firewall')&&t.passed==='합격')
+                 || (p.tasks.filter(t=>t.used==='사용').length>=2 && p.tasks.filter(t=>t.used==='사용').every(t=>t.passed==='합격'));
     rows.push({
-      '담당자': p.assignee, '자격': p.qual,
-      '시험1 과목명': t1?.exam||'', '시험1 사용여부': t1?.used||'', '시험1 합격여부': t1 ? statusText(t1) : '', '시험1 응시횟수': t1 ? (p.tasks.filter(t=>t.exam===t1.exam).length) : '',
-      '시험2 과목명': t2?.exam||'', '시험2 사용여부': t2?.used||'', '시험2 합격여부': t2 ? statusText(t2) : '', '시험2 응시횟수': t2 ? (p.tasks.filter(t=>t.exam===t2.exam).length) : '',
-      '시험3 과목명': t3?.exam||'', '시험3 사용여부': t3?.used||'', '시험3 합격여부': t3 ? statusText(t3) : '',
-      '자격 취득': (p.qual === 'FCSS' ? isQualifiedFCSS(p.tasks) : isQualifiedFCP(p.tasks)) ? '취득' : '미취득'
+      '담당자': p.name,
+      '시험1 과목명': t1?.exam||'', '시험1 사용여부': t1?.used||'', '시험1 합격여부': t1?statusText(t1):'',
+      '시험2 과목명': t2?.exam||'', '시험2 사용여부': t2?.used||'', '시험2 합격여부': t2?statusText(t2):'',
+      '시험3 과목명': t3?.exam||'', '시험3 사용여부': t3?.used||'', '시험3 합격여부': t3?statusText(t3):'',
+      '자격 취득': qual ? '취득' : '미취득'
     });
   });
   return rows;
@@ -427,10 +311,8 @@ function downloadCSV() {
   const csv = [headers.join(','), ...rows.map(r => headers.map(h => `"${(r[h]||'').toString().replace(/"/g,'""')}"`).join(','))].join('\n');
   const date = new Date().toISOString().slice(0,10);
   const blob = new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8;'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `포티넷_NSE_현황_${date}.csv`;
-  a.click();
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `포티넷_NSE_현황_${date}.csv`; a.click();
 }
 
 function downloadExcel() {
@@ -438,12 +320,11 @@ function downloadExcel() {
   if (!rows.length) return alert('먼저 데이터를 불러오세요.');
   const wb = XLSX.utils.book_new();
   const ws = XLSX.utils.json_to_sheet(rows);
-  ws['!cols'] = [{wch:10},{wch:6},{wch:36},{wch:12},{wch:12},{wch:8},{wch:36},{wch:12},{wch:12},{wch:8},{wch:36},{wch:12},{wch:12},{wch:8}];
+  ws['!cols'] = [{wch:10},{wch:36},{wch:12},{wch:12},{wch:36},{wch:12},{wch:12},{wch:36},{wch:12},{wch:12},{wch:8}];
   XLSX.utils.book_append_sheet(wb, ws, '취득 현황');
   XLSX.writeFile(wb, `포티넷_NSE_현황_${new Date().toISOString().slice(0,10)}.xlsx`);
 }
 
-// 페이지 로드 시 자동 데이터 로딩
 loadData();
 </script>
 </body>
