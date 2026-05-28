@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-05-28T03:30:20.261608",
+  "generated_at": "2026-05-28T07:56:41.545589",
   "fcss_done": 1,
   "fcp_done": 1,
   "total_vouchers": 12,
-  "used_vouchers": 8,
-  "remain_vouchers": 4,
+  "used_vouchers": 9,
+  "remain_vouchers": 3,
   "fail_vouchers": 1,
   "all_vouchers": [
     {
@@ -21,6 +21,15 @@
       "code": "FTE278896A65",
       "assignee": "박건욱",
       "exam": "FCSS - Enterprise Firewall 7.6 Administrator",
+      "qual": "FCSS",
+      "used": "사용",
+      "passed": "미정"
+    },
+    {
+      "no": 3,
+      "code": "FTE2788C240E",
+      "assignee": "김대중",
+      "exam": "FCSS - Network Security 7.6 Support Engineer",
       "qual": "FCSS",
       "used": "사용",
       "passed": "미정"
@@ -101,7 +110,7 @@
       "tasks": [
         {
           "exam": "FCSS - Network Security 7.6 Support Engineer",
-          "used": "미사용",
+          "used": "사용",
           "passed": "미정"
         },
         {
