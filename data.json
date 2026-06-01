@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-05-31T23:09:34.792170",
+  "generated_at": "2026-06-01T03:57:33.713164",
   "fcss_done": 1,
   "fcp_done": 1,
   "total_vouchers": 12,
-  "used_vouchers": 9,
-  "remain_vouchers": 3,
+  "used_vouchers": 10,
+  "remain_vouchers": 2,
   "fail_vouchers": 1,
   "all_vouchers": [
     {
@@ -87,6 +87,15 @@
       "qual": "FCP",
       "used": "사용",
       "passed": "합격"
+    },
+    {
+      "no": 11,
+      "code": "FTE279069305",
+      "assignee": "김태경",
+      "exam": "FCSS - Enterprise Firewall 7.6 Administrator",
+      "qual": "FCSS",
+      "used": "사용",
+      "passed": "미정"
     }
   ],
   "fcss": [
@@ -150,7 +159,7 @@
         },
         {
           "exam": "FCSS - Enterprise Firewall 7.6 Administrator",
-          "used": "미사용",
+          "used": "사용",
           "passed": "미정"
         }
       ]
