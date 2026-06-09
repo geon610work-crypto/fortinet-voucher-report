@@ -80,15 +80,15 @@ workflow_dispatch:         # 수동 실행 — 본인 DM으로 테스트 전송
 ## 자격 취득 조건
 
 ### FCSS (목표: 3명)
+- NSE4 (FortiOS) 합격
 - NSE6 (Network Security) 합격
 - NSE7 (Enterprise Firewall) 합격
-- → 두 과목 합격 시 🏆 FCSS 취득
-- NSE4 (FortiOS)까지 추가 합격 시 ⭐ 완전 완료
+- → 세 과목 모두 합격 시 🏆 FCSS 취득
 
 ### FCP (목표: 1명)
 - NSE4 (FortiOS) 합격
 - NSE5 (FortiManager) 합격
-- → 두 과목 합격 시 🏆 FCP 취득
+- → 두 과목 모두 합격 시 🏆 FCP 취득
 
 ### 시험 과목 판별 기준 (exam 필드 키워드)
 | 과목 | 키워드 |

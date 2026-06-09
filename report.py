@@ -73,16 +73,11 @@ def get_cf(task, name):
 
 
 def is_fcss_qualified(tasks):
-    """NSE6(Network Security) + NSE7(Enterprise Firewall) 둘 다 합격"""
-    nst = any("Network Security"    in t["exam"] and t["passed"] == "합격" for t in tasks)
-    efw = any("Enterprise Firewall" in t["exam"] and t["passed"] == "합격" for t in tasks)
-    return nst and efw
-
-
-def is_fcss_full(tasks):
-    """FCSS 취득 + NSE4(FortiOS) 합격 → 완전 완료"""
-    fortios = any("FortiOS" in t["exam"] and t["passed"] == "합격" for t in tasks)
-    return is_fcss_qualified(tasks) and fortios
+    """NSE4(FortiOS) + NSE6(Network Security) + NSE7(Enterprise Firewall) 세 과목 모두 합격"""
+    fortios = any("FortiOS"             in t["exam"] and t["passed"] == "합격" for t in tasks)
+    nst     = any("Network Security"    in t["exam"] and t["passed"] == "합격" for t in tasks)
+    efw     = any("Enterprise Firewall" in t["exam"] and t["passed"] == "합격" for t in tasks)
+    return fortios and nst and efw
 
 
 def is_fcp_qualified(tasks):
@@ -143,7 +138,6 @@ def main():
     fcss_people = {a: t for (a, q), t in groups.items() if q == "FCSS"}
     fcp_people  = {a: t for (a, q), t in groups.items() if q == "FCP"}
     fcss_done = sum(1 for tasks in fcss_people.values() if is_fcss_qualified(tasks))
-    fcss_full = sum(1 for tasks in fcss_people.values() if is_fcss_full(tasks))
     fcp_done  = sum(1 for tasks in fcp_people.values()  if is_fcp_qualified(tasks))
 
     today = datetime.now(KST)
@@ -179,7 +173,6 @@ def main():
     report_data = {
         "generated_at":    today.isoformat(),
         "fcss_done":       fcss_done,
-        "fcss_full":       fcss_full,
         "fcss_goal":       FCSS_GOAL,
         "fcp_done":        fcp_done,
         "fcp_goal":        FCP_GOAL,
