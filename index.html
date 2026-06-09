@@ -171,14 +171,11 @@ function statusText(task) {
 }
 
 function isQualFCSS(tasks) {
-  const nst = tasks.some(t => t.exam.includes('Network Security')    && t.passed === '합격');
-  const efw = tasks.some(t => t.exam.includes('Enterprise Firewall') && t.passed === '합격');
-  return nst && efw;
-}
-function isFullFCSS(tasks) {
-  // FCSS 취득 + NSE4(FortiOS)까지 합격 = 완전 완료
-  return isQualFCSS(tasks) &&
-         tasks.some(t => t.exam.includes('FortiOS') && t.passed === '합격');
+  // NSE4(FortiOS) + NSE6(Network Security) + NSE7(Enterprise Firewall) 세 과목 모두 합격
+  const fortios = tasks.some(t => t.exam.includes('FortiOS')             && t.passed === '합격');
+  const nst     = tasks.some(t => t.exam.includes('Network Security')    && t.passed === '합격');
+  const efw     = tasks.some(t => t.exam.includes('Enterprise Firewall') && t.passed === '합격');
+  return fortios && nst && efw;
 }
 function isQualFCP(tasks) {
   // NSE4(FortiOS) + NSE5(FortiManager) 둘 다 합격
@@ -206,16 +203,11 @@ function renderQualTable(thId, tbId, people, kind) {
       row += `<td class="c${dc}" style="font-size:11px;color:var(--muted)">${t ? t.exam : '—'}</td>`;
       row += `<td class="c">${badge(t)}</td>`;
     }
-    let acq;
-    if (kind === 'fcss') {
-      const full = isFullFCSS(p.tasks);
-      acq = full ? '<span class="acq-y" title="FCSS + NSE4 완전 완료">⭐</span>'
-          : qual ? '<span class="acq-y" title="FCSS 취득">🏆</span>'
-          : '<span class="acq-n">—</span>';
-    } else {
-      acq = qual ? '<span class="acq-y" title="FCP 취득">🏆</span>'
-                 : '<span class="acq-n">—</span>';
-    }
+    const acq = qual
+      ? (kind === 'fcss'
+          ? '<span class="acq-y" title="FCSS 취득 (NSE4+NSE6+NSE7)">🏆</span>'
+          : '<span class="acq-y" title="FCP 취득 (NSE4+NSE5)">🏆</span>')
+      : '<span class="acq-n">—</span>';
     row += `<td class="c">${acq}</td></tr>`;
     tb += row;
   });
@@ -228,8 +220,8 @@ function renderQualTable(thId, tbId, people, kind) {
     legend.className = 'legend';
     legend.style.cssText = 'padding:10px 16px;font-size:12px;color:var(--muted);border-top:1px solid var(--border);display:flex;gap:16px;';
     legend.innerHTML = kind === 'fcss'
-      ? '<span>🏆 FCSS 취득 (NSE6+NSE7)</span><span>⭐ 완전 완료 (NSE4+NSE6+NSE7)</span>'
-      : '<span>🏆 FCP 취득 (NSE4+NSE5)</span>';
+      ? '<span>🏆 FCSS 취득 (NSE4+NSE6+NSE7 모두 합격)</span>'
+      : '<span>🏆 FCP 취득 (NSE4+NSE5 모두 합격)</span>';
     wrap.appendChild(legend);
   }
 }

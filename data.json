@@ -1,13 +1,12 @@
 {
-  "generated_at": "2026-06-09T09:23:52.744344+09:00",
-  "fcss_done": 2,
-  "fcss_full": 0,
+  "generated_at": "2026-06-09T09:43:19.359049+09:00",
+  "fcss_done": 0,
   "fcss_goal": 3,
   "fcp_done": 1,
   "fcp_goal": 1,
   "total_vouchers": 12,
-  "used_vouchers": 11,
-  "remain_vouchers": 1,
+  "used_vouchers": 12,
+  "remain_vouchers": 0,
   "fail_vouchers": 1,
   "all_vouchers": [
     {
@@ -108,6 +107,15 @@
       "qual": "FCSS",
       "used": "사용",
       "passed": "미정"
+    },
+    {
+      "no": 12,
+      "code": "FTE27910435E",
+      "assignee": "박건욱",
+      "exam": "NSE 4 7.6 FortiOS Administrator",
+      "qual": "FCSS",
+      "used": "사용",
+      "passed": "미정"
     }
   ],
   "fcss": [
@@ -123,6 +131,11 @@
           "exam": "FCSS - Enterprise Firewall 7.6 Administrator",
           "used": "사용",
           "passed": "합격"
+        },
+        {
+          "exam": "NSE 4 7.6 FortiOS Administrator",
+          "used": "사용",
+          "passed": "미정"
         }
       ]
     },
