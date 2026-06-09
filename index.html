@@ -171,20 +171,29 @@ function statusText(task) {
 }
 
 function isQualFCSS(tasks) {
-  return tasks.some(t => t.exam.includes('Network Security')    && t.passed === '합격') &&
-         tasks.some(t => t.exam.includes('Enterprise Firewall') && t.passed === '합격');
+  const nst = tasks.some(t => t.exam.includes('Network Security')    && t.passed === '합격');
+  const efw = tasks.some(t => t.exam.includes('Enterprise Firewall') && t.passed === '합격');
+  return nst && efw;
+}
+function isFullFCSS(tasks) {
+  // FCSS 취득 + NSE4(FortiOS)까지 합격 = 완전 완료
+  return isQualFCSS(tasks) &&
+         tasks.some(t => t.exam.includes('FortiOS') && t.passed === '합격');
 }
 function isQualFCP(tasks) {
-  const used = tasks.filter(t => t.used === '사용');
-  return used.length >= 2 && used.every(t => t.passed === '합격');
+  // NSE4(FortiOS) + NSE5(FortiManager) 둘 다 합격
+  const fortios  = tasks.some(t => t.exam.includes('FortiOS')      && t.passed === '합격');
+  const fortimgr = tasks.some(t => t.exam.includes('FortiManager') && t.passed === '합격');
+  return fortios && fortimgr;
 }
 
-function renderQualTable(thId, tbId, people, isQualFn) {
+function renderQualTable(thId, tbId, people, kind) {
+  const isQualFn = kind === 'fcss' ? isQualFCSS : isQualFCP;
   const maxT = Math.max(...people.map(p => p.tasks.length), 2);
   let th = '<tr><th>담당자</th>';
   for (let i = 1; i <= maxT; i++)
     th += `<th class="c${i>1?' div-col':''}">시험 ${i} 과목</th><th class="c">결과</th>`;
-  th += '<th class="c">자격 취득</th></tr>';
+  th += '<th class="c">취득 현황</th></tr>';
   document.getElementById(thId).innerHTML = th;
 
   let tb = '';
@@ -197,10 +206,32 @@ function renderQualTable(thId, tbId, people, isQualFn) {
       row += `<td class="c${dc}" style="font-size:11px;color:var(--muted)">${t ? t.exam : '—'}</td>`;
       row += `<td class="c">${badge(t)}</td>`;
     }
-    row += `<td class="c">${qual ? '<span class="acq-y">🏆</span>' : '<span class="acq-n">—</span>'}</td></tr>`;
+    let acq;
+    if (kind === 'fcss') {
+      const full = isFullFCSS(p.tasks);
+      acq = full ? '<span class="acq-y" title="FCSS + NSE4 완전 완료">⭐</span>'
+          : qual ? '<span class="acq-y" title="FCSS 취득">🏆</span>'
+          : '<span class="acq-n">—</span>';
+    } else {
+      acq = qual ? '<span class="acq-y" title="FCP 취득">🏆</span>'
+                 : '<span class="acq-n">—</span>';
+    }
+    row += `<td class="c">${acq}</td></tr>`;
     tb += row;
   });
   document.getElementById(tbId).innerHTML = tb;
+
+  // 범례 추가 (FCSS / FCP 각각 다른 범례)
+  const wrap = document.getElementById(tbId).closest('.table-wrap');
+  if (!wrap.querySelector('.legend')) {
+    const legend = document.createElement('div');
+    legend.className = 'legend';
+    legend.style.cssText = 'padding:10px 16px;font-size:12px;color:var(--muted);border-top:1px solid var(--border);display:flex;gap:16px;';
+    legend.innerHTML = kind === 'fcss'
+      ? '<span>🏆 FCSS 취득 (NSE6+NSE7)</span><span>⭐ 완전 완료 (NSE4+NSE6+NSE7)</span>'
+      : '<span>🏆 FCP 취득 (NSE4+NSE5)</span>';
+    wrap.appendChild(legend);
+  }
 }
 
 function renderVouchers() {
@@ -257,18 +288,21 @@ function renderAll() {
 
   const fcss = DATA.fcss || [];
   const fcp  = DATA.fcp  || [];
+  // 백엔드(report.py) 집계를 단일 소스로 사용 — 없을 때만 프런트에서 재계산
+  const fcssGoal = DATA.fcss_goal ?? FCSS_GOAL;
+  const fcpGoal  = DATA.fcp_goal  ?? FCP_GOAL;
+  const fcssDone = DATA.fcss_done ?? fcss.filter(p => isQualFCSS(p.tasks)).length;
+  const fcpDone  = DATA.fcp_done  ?? fcp .filter(p => isQualFCP (p.tasks)).length;
 
-  const fcssDone = fcss.filter(p => isQualFCSS(p.tasks)).length;
   document.getElementById('fcss-done').textContent = fcssDone;
-  document.getElementById('fcss-badge').textContent = `${fcssDone} / ${FCSS_GOAL}명`;
-  document.getElementById('fcss-bar').style.width = `${Math.round(fcssDone/FCSS_GOAL*100)}%`;
-  renderQualTable('fcss-th', 'fcss-tb', fcss, isQualFCSS);
+  document.getElementById('fcss-badge').textContent = `${fcssDone} / ${fcssGoal}명`;
+  document.getElementById('fcss-bar').style.width = `${Math.round(fcssDone/fcssGoal*100)}%`;
+  renderQualTable('fcss-th', 'fcss-tb', fcss, 'fcss');
 
-  const fcpDone = fcp.filter(p => isQualFCP(p.tasks)).length;
   document.getElementById('fcp-done').textContent = fcpDone;
-  document.getElementById('fcp-badge').textContent = `${fcpDone} / ${FCP_GOAL}명`;
-  document.getElementById('fcp-bar').style.width = `${Math.round(fcpDone/FCP_GOAL*100)}%`;
-  renderQualTable('fcp-th', 'fcp-tb', fcp, isQualFCP);
+  document.getElementById('fcp-badge').textContent = `${fcpDone} / ${fcpGoal}명`;
+  document.getElementById('fcp-bar').style.width = `${Math.round(fcpDone/fcpGoal*100)}%`;
+  renderQualTable('fcp-th', 'fcp-tb', fcp, 'fcp');
 
   renderVouchers();
 }
@@ -295,11 +329,13 @@ async function loadData() {
 function buildExportRows() {
   if (!DATA) return [];
   const rows = [];
-  [...(DATA.fcss||[]), ...(DATA.fcp||[])].forEach(p => {
+  const tagged = [
+    ...(DATA.fcss||[]).map(p => ({p, kind:'fcss'})),
+    ...(DATA.fcp ||[]).map(p => ({p, kind:'fcp' })),
+  ];
+  tagged.forEach(({p, kind}) => {
     const t1=p.tasks[0], t2=p.tasks[1], t3=p.tasks[2];
-    const qual = p.tasks.some(t=>t.exam.includes('Network Security')&&t.passed==='합격') &&
-                 p.tasks.some(t=>t.exam.includes('Enterprise Firewall')&&t.passed==='합격')
-                 || (p.tasks.filter(t=>t.used==='사용').length>=2 && p.tasks.filter(t=>t.used==='사용').every(t=>t.passed==='합격'));
+    const qual = kind === 'fcss' ? isQualFCSS(p.tasks) : isQualFCP(p.tasks);
     rows.push({
       '담당자': p.name,
       '시험1 과목명': t1?.exam||'', '시험1 사용여부': t1?.used||'', '시험1 합격여부': t1?statusText(t1):'',
