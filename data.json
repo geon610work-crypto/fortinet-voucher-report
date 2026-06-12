@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T08:20:26.396967+09:00",
+  "generated_at": "2026-06-12T11:15:10.228700+09:00",
   "fcss_done": 0,
   "fcss_goal": 3,
   "fcp_done": 1,
@@ -106,7 +106,7 @@
       "exam": "FCSS - Enterprise Firewall 7.6 Administrator",
       "qual": "FCSS",
       "used": "사용",
-      "passed": "미정"
+      "passed": "합격"
     },
     {
       "no": 12,
@@ -185,7 +185,7 @@
         {
           "exam": "FCSS - Enterprise Firewall 7.6 Administrator",
           "used": "사용",
-          "passed": "미정"
+          "passed": "합격"
         }
       ]
     }
