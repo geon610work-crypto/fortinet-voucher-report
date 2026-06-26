@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-26T09:07:58.194334+09:00",
+  "generated_at": "2026-06-26T11:07:03.341016+09:00",
   "fcss_done": 0,
   "fcss_goal": 3,
   "fcp_done": 1,
@@ -34,7 +34,7 @@
       "exam": "FCSS - Network Security 7.6 Support Engineer",
       "qual": "FCSS",
       "used": "사용",
-      "passed": "미정"
+      "passed": "합격"
     },
     {
       "no": 4,
@@ -145,7 +145,7 @@
         {
           "exam": "FCSS - Network Security 7.6 Support Engineer",
           "used": "사용",
-          "passed": "미정"
+          "passed": "합격"
         },
         {
           "exam": "FCSS - Enterprise Firewall 7.6 Administrator",
