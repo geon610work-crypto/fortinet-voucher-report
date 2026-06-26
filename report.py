@@ -153,6 +153,10 @@ def main():
             ],
         }
 
+    # 회사 바우처 / 개인결제 분리 — 통계와 표시를 구분
+    company_rows  = [r for r in rows if r["used"] != "개인결제"]
+    personal_rows = [r for r in rows if r["used"] == "개인결제"]
+
     all_vouchers = [
         {
             "no": r["no"],
@@ -163,12 +167,29 @@ def main():
             "used": r["used"],
             "passed": r["passed"],
         }
-        for r in rows if r["used"] == "사용"
+        for r in company_rows if r["used"] == "사용"
     ]
 
-    total      = len(rows)
-    used_count = sum(1 for r in rows if r["used"] == "사용")
-    fail_count = sum(1 for r in rows if r["used"] == "사용" and r["passed"] == "불합격")
+    personal_vouchers = [
+        {
+            "no": r["no"],
+            "code": r["code"],
+            "assignee": r["assignee"],
+            "exam": r["exam"],
+            "qual": r["qual"],
+            "passed": r["passed"],
+        }
+        for r in personal_rows
+    ]
+
+    total      = len(company_rows)
+    used_count = sum(1 for r in company_rows if r["used"] == "사용")
+    fail_count = sum(1 for r in company_rows if r["used"] == "사용" and r["passed"] == "불합격")
+
+    personal_total = len(personal_rows)
+    personal_pass  = sum(1 for r in personal_rows if r["passed"] == "합격")
+    personal_fail  = sum(1 for r in personal_rows if r["passed"] == "불합격")
+    personal_wait  = personal_total - personal_pass - personal_fail
 
     report_data = {
         "generated_at":    today.isoformat(),
@@ -181,6 +202,11 @@ def main():
         "remain_vouchers": total - used_count,
         "fail_vouchers":   fail_count,
         "all_vouchers":    all_vouchers,
+        "personal_total":  personal_total,
+        "personal_pass":   personal_pass,
+        "personal_fail":   personal_fail,
+        "personal_wait":   personal_wait,
+        "personal_vouchers": personal_vouchers,
         "fcss":            [make_person_data(a, tasks) for a, tasks in fcss_people.items()],
         "fcp":             [make_person_data(a, tasks) for a, tasks in fcp_people.items()],
     }

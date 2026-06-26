@@ -140,10 +140,16 @@
         <div class="section-title">바우처 소모 현황</div>
       </div>
       <div class="stat-grid">
-        <div class="stat-card"><div class="stat-label">전체 바우처</div><div class="stat-value" id="v-total">—</div></div>
+        <div class="stat-card"><div class="stat-label">회사 바우처 전체</div><div class="stat-value" id="v-total">—</div></div>
         <div class="stat-card"><div class="stat-label">사용됨</div><div class="stat-value" style="color:#1a5fb4" id="v-used">—</div></div>
         <div class="stat-card"><div class="stat-label">잔여</div><div class="stat-value" style="color:#1d7a4a" id="v-remain">—</div></div>
         <div class="stat-card"><div class="stat-label">불합격</div><div class="stat-value" style="color:#c0392b" id="v-fail">—</div></div>
+      </div>
+      <div class="stat-grid" id="personal-grid" style="display:none;margin-top:-0.5rem">
+        <div class="stat-card"><div class="stat-label">💳 개인결제 응시</div><div class="stat-value" id="p-total">—</div></div>
+        <div class="stat-card"><div class="stat-label">합격</div><div class="stat-value" style="color:#1d7a4a" id="p-pass">—</div></div>
+        <div class="stat-card"><div class="stat-label">불합격</div><div class="stat-value" style="color:#c0392b" id="p-fail">—</div></div>
+        <div class="stat-card"><div class="stat-label">응시 예정</div><div class="stat-value" style="color:#9a6000" id="p-wait">—</div></div>
       </div>
       <div class="table-wrap"><table><thead id="v-th"></thead><tbody id="v-tb"></tbody></table></div>
     </div>
@@ -157,14 +163,26 @@ const FCSS_GOAL = 3, FCP_GOAL = 1;
 let DATA = null;
 
 function badge(task) {
-  if (!task || task.used !== '사용') return '<span class="badge b-none">⬜ 미사용</span>';
+  if (!task) return '<span class="badge b-none">⬜ 미사용</span>';
+  if (task.used === '개인결제') {
+    if (task.passed === '합격')   return '<span class="badge b-pass">💳 ✅ 개인결제 합격</span>';
+    if (task.passed === '불합격') return '<span class="badge b-fail">💳 ❌ 개인결제 불합격</span>';
+    return '<span class="badge b-wait">💳 🔄 개인결제 응시 예정</span>';
+  }
+  if (task.used !== '사용') return '<span class="badge b-none">⬜ 미사용</span>';
   if (task.passed === '합격')   return '<span class="badge b-pass">✅ 합격</span>';
   if (task.passed === '불합격') return '<span class="badge b-fail">❌ 불합격</span>';
   return '<span class="badge b-wait">🔄 응시 예정</span>';
 }
 
 function statusText(task) {
-  if (!task || task.used !== '사용') return '미사용';
+  if (!task) return '미사용';
+  if (task.used === '개인결제') {
+    if (task.passed === '합격')   return '개인결제 합격';
+    if (task.passed === '불합격') return '개인결제 불합격';
+    return '개인결제 응시 예정';
+  }
+  if (task.used !== '사용') return '미사용';
   if (task.passed === '합격')   return '합격';
   if (task.passed === '불합격') return '불합격';
   return '응시 예정';
@@ -231,6 +249,19 @@ function renderVouchers() {
   document.getElementById('v-used').textContent   = DATA.used_vouchers;
   document.getElementById('v-remain').textContent = DATA.remain_vouchers;
   document.getElementById('v-fail').textContent   = DATA.fail_vouchers;
+
+  // 개인결제 응시 요약 — 한 건이라도 있을 때만 노출
+  const pTotal = DATA.personal_total || 0;
+  const pGrid  = document.getElementById('personal-grid');
+  if (pTotal > 0) {
+    pGrid.style.display = '';
+    document.getElementById('p-total').textContent = pTotal;
+    document.getElementById('p-pass').textContent  = DATA.personal_pass || 0;
+    document.getElementById('p-fail').textContent  = DATA.personal_fail || 0;
+    document.getElementById('p-wait').textContent  = DATA.personal_wait || 0;
+  } else {
+    pGrid.style.display = 'none';
+  }
 
   // 담당자별 사용 바우처 그룹 (all_vouchers)
   const byPerson = {};
@@ -320,23 +351,25 @@ async function loadData() {
 
 function buildExportRows() {
   if (!DATA) return [];
-  const rows = [];
   const tagged = [
     ...(DATA.fcss||[]).map(p => ({p, kind:'fcss'})),
     ...(DATA.fcp ||[]).map(p => ({p, kind:'fcp' })),
   ];
-  tagged.forEach(({p, kind}) => {
-    const t1=p.tasks[0], t2=p.tasks[1], t3=p.tasks[2];
+  if (!tagged.length) return [];
+  // 재시험 등으로 한 사람 태스크가 늘어나도 모두 포함되도록 동적 계산
+  const maxT = Math.max(...tagged.map(({p}) => p.tasks.length), 1);
+  return tagged.map(({p, kind}) => {
     const qual = kind === 'fcss' ? isQualFCSS(p.tasks) : isQualFCP(p.tasks);
-    rows.push({
-      '담당자': p.name,
-      '시험1 과목명': t1?.exam||'', '시험1 사용여부': t1?.used||'', '시험1 합격여부': t1?statusText(t1):'',
-      '시험2 과목명': t2?.exam||'', '시험2 사용여부': t2?.used||'', '시험2 합격여부': t2?statusText(t2):'',
-      '시험3 과목명': t3?.exam||'', '시험3 사용여부': t3?.used||'', '시험3 합격여부': t3?statusText(t3):'',
-      '자격 취득': qual ? '취득' : '미취득'
-    });
+    const row = { '담당자': p.name };
+    for (let i = 0; i < maxT; i++) {
+      const t = p.tasks[i];
+      row[`시험${i+1} 과목명`]   = t?.exam || '';
+      row[`시험${i+1} 사용여부`] = t?.used || '';
+      row[`시험${i+1} 합격여부`] = t ? statusText(t) : '';
+    }
+    row['자격 취득'] = qual ? '취득' : '미취득';
+    return row;
   });
-  return rows;
 }
 
 function downloadCSV() {
@@ -355,7 +388,14 @@ function downloadExcel() {
   if (!rows.length) return alert('먼저 데이터를 불러오세요.');
   const wb = XLSX.utils.book_new();
   const ws = XLSX.utils.json_to_sheet(rows);
-  ws['!cols'] = [{wch:10},{wch:36},{wch:12},{wch:12},{wch:36},{wch:12},{wch:12},{wch:36},{wch:12},{wch:12},{wch:8}];
+  // 헤더 수에 맞춰 컬럼 너비 동적 설정 (시험 수가 늘어도 대응)
+  const headers = Object.keys(rows[0]);
+  ws['!cols'] = headers.map(h => {
+    if (h === '담당자')         return {wch:10};
+    if (h === '자격 취득')      return {wch:8};
+    if (h.endsWith('과목명'))   return {wch:36};
+    return {wch:12};
+  });
   XLSX.utils.book_append_sheet(wb, ws, '취득 현황');
   XLSX.writeFile(wb, `포티넷_NSE_현황_${new Date().toISOString().slice(0,10)}.xlsx`);
 }
