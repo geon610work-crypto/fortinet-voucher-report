@@ -163,29 +163,33 @@ const FCSS_GOAL = 3, FCP_GOAL = 1;
 let DATA = null;
 
 function badge(task) {
+  // 합격/불합격은 사용여부와 무관하게 결과를 그대로 표시 (개인결제·바우처 외 결제 등 모든 경로 포함)
   if (!task) return '<span class="badge b-none">⬜ 미사용</span>';
-  if (task.used === '개인결제') {
-    if (task.passed === '합격')   return '<span class="badge b-pass">💳 ✅ 개인결제 합격</span>';
-    if (task.passed === '불합격') return '<span class="badge b-fail">💳 ❌ 개인결제 불합격</span>';
-    return '<span class="badge b-wait">💳 🔄 개인결제 응시 예정</span>';
+  const isPersonal = task.used === '개인결제';
+  if (task.passed === '합격') {
+    return isPersonal
+      ? '<span class="badge b-pass">💳 ✅ 개인결제 합격</span>'
+      : '<span class="badge b-pass">✅ 합격</span>';
   }
-  if (task.used !== '사용') return '<span class="badge b-none">⬜ 미사용</span>';
-  if (task.passed === '합격')   return '<span class="badge b-pass">✅ 합격</span>';
-  if (task.passed === '불합격') return '<span class="badge b-fail">❌ 불합격</span>';
-  return '<span class="badge b-wait">🔄 응시 예정</span>';
+  if (task.passed === '불합격') {
+    return isPersonal
+      ? '<span class="badge b-fail">💳 ❌ 개인결제 불합격</span>'
+      : '<span class="badge b-fail">❌ 불합격</span>';
+  }
+  // 합격여부가 미정인 경우만 사용여부로 응시 예정 / 미사용 구분
+  if (task.used === '사용')     return '<span class="badge b-wait">🔄 응시 예정</span>';
+  if (isPersonal)               return '<span class="badge b-wait">💳 🔄 개인결제 응시 예정</span>';
+  return '<span class="badge b-none">⬜ 미사용</span>';
 }
 
 function statusText(task) {
   if (!task) return '미사용';
-  if (task.used === '개인결제') {
-    if (task.passed === '합격')   return '개인결제 합격';
-    if (task.passed === '불합격') return '개인결제 불합격';
-    return '개인결제 응시 예정';
-  }
-  if (task.used !== '사용') return '미사용';
-  if (task.passed === '합격')   return '합격';
-  if (task.passed === '불합격') return '불합격';
-  return '응시 예정';
+  const isPersonal = task.used === '개인결제';
+  if (task.passed === '합격')   return isPersonal ? '개인결제 합격'   : '합격';
+  if (task.passed === '불합격') return isPersonal ? '개인결제 불합격' : '불합격';
+  if (task.used === '사용')     return '응시 예정';
+  if (isPersonal)               return '개인결제 응시 예정';
+  return '미사용';
 }
 
 function isQualFCSS(tasks) {
