@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-06-30T14:01:46.653513+09:00",
-  "fcss_done": 0,
+  "generated_at": "2026-06-30T15:46:00.540558+09:00",
+  "fcss_done": 1,
   "fcss_goal": 3,
   "fcp_done": 1,
   "fcp_goal": 1,
@@ -115,7 +115,7 @@
       "exam": "NSE 4 7.6 FortiOS Administrator",
       "qual": "FCSS",
       "used": "사용",
-      "passed": "미정"
+      "passed": "합격"
     }
   ],
   "personal_total": 0,
@@ -140,7 +140,7 @@
         {
           "exam": "NSE 4 7.6 FortiOS Administrator",
           "used": "사용",
-          "passed": "미정"
+          "passed": "합격"
         }
       ]
     },
