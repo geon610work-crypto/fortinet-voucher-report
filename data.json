@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-30T15:46:00.540558+09:00",
+  "generated_at": "2026-06-30T18:32:38.847325+09:00",
   "fcss_done": 1,
   "fcss_goal": 3,
   "fcp_done": 1,
@@ -7,7 +7,7 @@
   "total_vouchers": 12,
   "used_vouchers": 12,
   "remain_vouchers": 0,
-  "fail_vouchers": 1,
+  "fail_vouchers": 2,
   "all_vouchers": [
     {
       "no": 1,
@@ -43,7 +43,7 @@
       "exam": "FCSS - Enterprise Firewall 7.6 Administrator",
       "qual": "FCSS",
       "used": "사용",
-      "passed": "미정"
+      "passed": "불합격"
     },
     {
       "no": 5,
@@ -155,7 +155,7 @@
         {
           "exam": "FCSS - Enterprise Firewall 7.6 Administrator",
           "used": "사용",
-          "passed": "미정"
+          "passed": "불합격"
         }
       ]
     },
